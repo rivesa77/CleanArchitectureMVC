@@ -16,6 +16,17 @@ namespace MVCPrueba1.Controllers
             return View();
         }
 
+        [HttpGet("example/{text}")]
+        public IActionResult Example(string text)
+        {
+            IndexViewModel indexViewModel = new()
+            {
+                Content = text
+            };
+
+            return View("Example", indexViewModel);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
