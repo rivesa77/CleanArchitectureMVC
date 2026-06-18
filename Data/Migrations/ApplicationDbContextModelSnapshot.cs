@@ -26,7 +26,11 @@ namespace MVCPrueba1.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasMaxLength(9)
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DNI")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");

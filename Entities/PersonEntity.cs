@@ -14,9 +14,9 @@ namespace MVCPrueba1.Entities
         [MaxLength(9)]
         public Guid Id { get; set; }
 
-        public string DNI { get; set; }
+        public required string DNI { get; set; }
 
-        public required string Name { get; set; }
+        public string Name { get; set; }
 
         public string Email { get; set; }
 
