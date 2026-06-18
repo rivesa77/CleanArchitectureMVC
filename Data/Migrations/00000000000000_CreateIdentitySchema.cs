@@ -1,5 +1,5 @@
-﻿// <copyright file="00000000000000_CreateIdentitySchema.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// <copyright file="00000000000000_CreateIdentitySchema.cs" company="Ricardo">
+// Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
 namespace MVCPrueba1.Data.Migrations

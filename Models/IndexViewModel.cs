@@ -1,5 +1,5 @@
-﻿// <copyright file="IndexViewModel.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// <copyright file="IndexViewModel.cs" company="Ricardo">
+// Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
 namespace MVCPrueba1.Models
