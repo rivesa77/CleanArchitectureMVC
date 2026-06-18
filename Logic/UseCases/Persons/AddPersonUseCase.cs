@@ -36,8 +36,7 @@ namespace MVCPrueba1.Logic.UseCases.Persons
         private async Task<Result<string>> ValidatePerson(string dni)
         {
             bool flagExist = await this.applicationDbContext.Persons
-                .Where(p => p.DNI.Equals(dni, StringComparison.CurrentCultureIgnoreCase))
-                .AnyAsync()
+                .AnyAsync(p => p.DNI.ToLower() == dni.ToLower())
                 .ConfigureAwait(false);
 
             if (flagExist)
