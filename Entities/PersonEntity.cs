@@ -11,13 +11,16 @@ namespace MVCPrueba1.Entities
     public class PersonEntity
     {
         [Key]
+        [MaxLength(9)]
         public Guid Id { get; set; }
+
+        public string DNI { get; set; }
 
         public required string Name { get; set; }
 
-        public required string Email { get; set; }
+        public string Email { get; set; }
 
-        public required string Phone { get; set; }
+        public string Phone { get; set; }
 
         public virtual IdentityUser User { get; set; }
 
