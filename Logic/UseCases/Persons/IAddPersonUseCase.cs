@@ -4,10 +4,11 @@
 
 namespace MVCPrueba1.Logic.UseCases.Persons
 {
+    using MVCPrueba1.Models;
     using ROP;
 
     public interface IAddPersonUseCase
     {
-        Task<Result<bool>> Execute(string dni);
+        Task<Result<bool>> Execute(PersonViewModel personViewModel);
     }
 }

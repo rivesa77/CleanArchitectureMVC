@@ -38,7 +38,7 @@ namespace MVCPrueba1.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> AddPersonToDataBase(PersonViewModel personViewModel)
         {
-            Result<bool> result = await this.addPersonUseCase.Execute(personViewModel.DNI)
+            Result<bool> result = await this.addPersonUseCase.Execute(personViewModel)
                 .ConfigureAwait(false);
 
             if (result.Errors.Any())
