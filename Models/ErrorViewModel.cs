@@ -1,5 +1,5 @@
-// <copyright file="ErrorViewModel.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// <copyright file="ErrorViewModel.cs" company="Ricardo">
+// Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
 namespace MVCPrueba1.Models
@@ -8,6 +8,6 @@ namespace MVCPrueba1.Models
     {
         public string? RequestId { get; set; }
 
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+        public bool ShowRequestId => !string.IsNullOrEmpty(this.RequestId);
     }
 }

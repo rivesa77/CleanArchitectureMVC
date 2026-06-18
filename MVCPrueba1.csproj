@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-MVCPrueba1-a8a3239c-4e6d-4756-8550-df6d88c864c1</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
