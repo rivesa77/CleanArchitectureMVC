@@ -1,0 +1,62 @@
+﻿@model PersonViewModel
+
+@if (!string.IsNullOrWhiteSpace(@Model.ErrorMessage))
+{
+	<div class="alert alert-danger" role="alert">
+		@Model.ErrorMessage
+	</div>
+}
+
+<form asp-action="create" asp-controller="Persons"
+	  method="post" class="row row-cols-lg-auto g-3 align-items-center">
+
+	<div class="col-12">
+		<label class="visually-hidden" for="DNI">
+			DNI
+		</label>
+
+		<div class="input-group">
+			<div class="input-group-text">DNI</div>
+			<input type="text" asp-for="DNI" class=" form-control" id="inlineFormInputGroupUsername" placeholder="DNI">
+		</div>
+	</div>
+
+	<div class="col-12">
+		<label class="visually-hidden" for="PersonName">
+			Person Name
+		</label>
+
+		<div class="input-group">
+			<div class="input-group-text">Person Name</div>
+			<input type="text" asp-for="Name" class=" form-control" id="inlineFormInputGroupUsername" placeholder="Person Name">
+		</div>
+	</div>
+
+	<div class="col-12">
+		<label class="visually-hidden" for="Email">
+			Email
+		</label>
+
+		<div class="input-group">
+			<div class="input-group-text">Email</div>
+			<input type="text" asp-for="Email" class=" form-control" id="inlineFormInputGroupUsername" placeholder="Email">
+		</div>
+	</div>
+
+	<div class="col-12">
+		<label class="visually-hidden" for="Telefono">
+			Phone
+		</label>
+
+		<div class="input-group">
+			<div class="input-group-text">Phone</div>
+			<input type="text" asp-for="Phone" class=" form-control" id="inlineFormInputGroupUsername" placeholder="Phone">
+		</div>
+	</div>
+
+
+	<div class="col-12">
+		<button type="submit" class="btn btn-primary">Create Person</button>
+	</div>
+
+</form>
