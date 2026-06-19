@@ -15,16 +15,14 @@ namespace MVCPrueba1.Controllers
     public class PersonsController : Controller
     {
         private readonly IAddPersonUseCase addPersonUseCase;
+        private readonly IGetPersonsUseCase getPersonsUseCase;
 
-        public PersonsController(IAddPersonUseCase addPersonUseCase)
+        public PersonsController(
+            IAddPersonUseCase addPersonUseCase,
+            IGetPersonsUseCase getPersonsUseCase)
         {
             this.addPersonUseCase = addPersonUseCase;
-        }
-
-        [HttpGet("")]
-        public IActionResult Index()
-        {
-            return this.View();
+            this.getPersonsUseCase = getPersonsUseCase;
         }
 
         [HttpGet("create")]
@@ -49,6 +47,25 @@ namespace MVCPrueba1.Controllers
             }
 
             return this.RedirectToAction("Index");
+        }
+
+        [HttpGet("")]
+        public async Task<IActionResult> Index()
+        {
+            Result<IEnumerable<PersonViewModel>> result = await this.getPersonsUseCase.Execute()
+                .ConfigureAwait(false);
+
+            if (result.Errors.Any())
+            {
+                return this.View("Index", new List<PersonViewModel>());
+            }
+
+            PersonCollectionViewModel personCollectionViewModel = new PersonCollectionViewModel()
+            {
+                Persons = result.Value,
+            };
+
+            return this.View("Index", personCollectionViewModel);
         }
     }
 }

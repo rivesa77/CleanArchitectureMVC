@@ -1,0 +1,35 @@
+﻿@model PersonCollectionViewModel
+
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">DNI</th>
+			<th scope="col">Name</th>
+			<th scope="col">Email</th>
+			<th scope="col">Phone</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var person in Model.Persons)
+		{
+			<tr>
+				<th scope="row">@person.DNI</th>
+				<td>@person.Name</td>
+				<td>@person.Email</td>
+				<td>@person.Phone</td>
+				<td>
+					<a asp-action="delete" asp-controller="persons" asp-route-personDNI="@person.DNI"
+					   type="button" class="btn btn-outline-danger">
+						<i class="bi bi-archive"></i>
+					</a>
+					<a asp-action="@person.Name" asp-controller="persons" type="button" class="btn btn-outline-primary">
+						<i class="bi bi-pencil"></i>
+					</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<a asp-action="create" asp-controller="Persons" class="btn btn-primary">Create Person</a>
+
