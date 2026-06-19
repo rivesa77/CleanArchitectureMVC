@@ -6,6 +6,8 @@ namespace MVCPrueba1.Models
 {
     public class PersonViewModel
     {
+        public Guid Id { get; set; }
+
         public string DNI { get; set; }
 
         public string Name { get; set; }

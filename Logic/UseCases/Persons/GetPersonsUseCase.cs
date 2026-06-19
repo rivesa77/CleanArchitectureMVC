@@ -38,6 +38,7 @@ namespace MVCPrueba1.Logic.UseCases.Persons
                     Name = p.Name,
                     Email = p.Email,
                     Phone = p.Phone,
+                    Id = p.Id,
                 })
                 .AsNoTracking()
                 .ToListAsync();

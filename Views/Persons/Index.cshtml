@@ -7,6 +7,7 @@
 			<th scope="col">Name</th>
 			<th scope="col">Email</th>
 			<th scope="col">Phone</th>
+			<th scope="col">Actions</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -18,11 +19,11 @@
 				<td>@person.Email</td>
 				<td>@person.Phone</td>
 				<td>
-					<a asp-action="delete" asp-controller="persons" asp-route-personDNI="@person.DNI"
+					<a asp-action="delete" asp-controller="persons" asp-route-personId="@person.Id"
 					   type="button" class="btn btn-outline-danger">
 						<i class="bi bi-archive"></i>
 					</a>
-					<a asp-action="@person.DNI" asp-controller="persons" type="button" class="btn btn-outline-primary">
+					<a asp-action="@person.Id" asp-controller="persons" type="button" class="btn btn-outline-primary">
 						<i class="bi bi-pencil"></i>
 					</a>
 				</td>
