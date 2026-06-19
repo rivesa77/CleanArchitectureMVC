@@ -7,21 +7,25 @@ namespace MVCPrueba1.Logic.UseCases.Persons
     using Microsoft.EntityFrameworkCore;
     using MVCPrueba1.Data;
     using MVCPrueba1.Entities;
+    using MVCPrueba1.Logic.Converter.PersonsViewModel.ToPersonEntity;
     using MVCPrueba1.Logic.UserInfo;
     using MVCPrueba1.Models;
     using ROP;
 
-    public class AddPersonUseCase : IAddPersonUseCase
+    internal class AddPersonUseCase : IAddPersonUseCase
     {
         private readonly ApplicationDbContext applicationDbContext;
         private readonly IPersonUserDetails personUserDetails;
+        private readonly IPersonsViewModelToPersonEntityConverter converter;
 
         public AddPersonUseCase(
             ApplicationDbContext applicationDbContext,
-            IPersonUserDetails flagUserDetails)
+            IPersonUserDetails flagUserDetails,
+            IPersonsViewModelToPersonEntityConverter converter)
         {
             this.applicationDbContext = applicationDbContext;
             this.personUserDetails = flagUserDetails;
+            this.converter = converter;
         }
 
         public async Task<Result<bool>> Execute(PersonViewModel personViewModel)
@@ -50,14 +54,7 @@ namespace MVCPrueba1.Logic.UseCases.Persons
 
         private async Task<Result<bool>> AddPersonToDatabase(PersonViewModel personViewModel)
         {
-            PersonEntity personEntity = new PersonEntity()
-            {
-                DNI = personViewModel.DNI,
-                UserId = this.personUserDetails.UserId,
-                Email = personViewModel.Email,
-                Name = personViewModel.Name,
-                Phone = personViewModel.Phone,
-            };
+            PersonEntity personEntity = this.converter.Convert(personViewModel);
 
             await this.applicationDbContext.AddAsync(personEntity);
             await this.applicationDbContext.SaveChangesAsync();
