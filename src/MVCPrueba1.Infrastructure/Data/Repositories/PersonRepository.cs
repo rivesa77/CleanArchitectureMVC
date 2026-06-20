@@ -19,15 +19,29 @@ namespace MVCPrueba1.Data.Repositories
 
         public async Task<bool> ExistsByDniAsync(string dni)
         {
+            string normalizedDni = dni?.Trim().ToUpperInvariant() ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(normalizedDni))
+            {
+                return false;
+            }
+
             return await this.applicationDbContext.Persons
-                .AnyAsync(p => p.DNI.ToLower() == dni.ToLower())
+                .AnyAsync(p => p.DNI == normalizedDni)
                 .ConfigureAwait(false);
         }
 
         public async Task<bool> ExistsByDniAndIdAsync(string dni, Guid id)
         {
+            string normalizedDni = dni?.Trim().ToUpperInvariant() ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(normalizedDni))
+            {
+                return false;
+            }
+
             return await this.applicationDbContext.Persons
-                .AnyAsync(p => p.DNI.ToLower() == dni.ToLower() && p.Id != id)
+                .AnyAsync(p => p.DNI == normalizedDni && p.Id != id)
                 .ConfigureAwait(false);
         }
 
@@ -39,6 +53,11 @@ namespace MVCPrueba1.Data.Repositories
 
         public async Task<IEnumerable<PersonEntity>> GetByUserIdAsync(string userId)
         {
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return [];
+            }
+
             return await this.applicationDbContext.Persons
                 .Where(p => p.UserId == userId)
                 .AsNoTracking()
@@ -48,6 +67,11 @@ namespace MVCPrueba1.Data.Repositories
 
         public async Task<PersonEntity> GetByIdAndUserIdAsync(Guid id, string userId)
         {
+            if (!string.IsNullOrWhiteSpace(userId) || !string.IsNullOrWhiteSpace(userId))
+            {
+                return default;
+            }
+
             return await this.applicationDbContext.Persons
                 .AsNoTracking()
                 .SingleOrDefaultAsync(p => p.Id == id && p.UserId == userId)

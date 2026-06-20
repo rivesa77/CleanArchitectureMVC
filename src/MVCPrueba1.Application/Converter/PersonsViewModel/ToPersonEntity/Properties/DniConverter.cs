@@ -21,7 +21,7 @@ namespace MVCPrueba1.Logic.Converter.PersonsViewModel.ToPersonEntity.Properties
 
         protected override void SetPropertyValue(in PersonEntity result, string propertyValue)
         {
-            result.DNI = propertyValue;
+            result.DNI = propertyValue.ToUpperInvariant();
         }
     }
 }

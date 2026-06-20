@@ -78,7 +78,7 @@ namespace MVCPrueba1.Controllers
             Result<PersonViewModel> result = await this.getPersonUseCase.Execute(id)
                 .ConfigureAwait(false);
 
-            PersonViewModel personViewModel = result.Value;
+            PersonViewModel personViewModel = result.Value ?? new PersonViewModel();
 
             if (result.Errors.Any())
             {

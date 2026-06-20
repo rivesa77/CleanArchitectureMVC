@@ -53,6 +53,11 @@ namespace MVCPrueba1.Logic.UseCases.Persons
         {
             PersonEntity personEntity = this.converter.Convert(personViewModel);
 
+            if (personEntity is null)
+            {
+                return Result.Failure<bool>("Conversion from PersonViewModel to PersonEntity failed, PersonEntity is null");
+            }
+
             await this.personRepository.AddAsync(personEntity).ConfigureAwait(false);
 
             return true;
