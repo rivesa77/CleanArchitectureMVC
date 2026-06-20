@@ -19,17 +19,20 @@ namespace MVCPrueba1.Controllers
         private readonly IGetPersonsUseCase getPersonsUseCase;
         private readonly IGetPersonUseCase getPersonUseCase;
         private readonly IUpdatePersonUseCase updatePersonUseCase;
+        private readonly IDeletePersonUseCase deletePersonUseCase;
 
         public PersonsController(
             IAddPersonUseCase addPersonUseCase,
             IGetPersonsUseCase getPersonsUseCase,
             IGetPersonUseCase getPersonUseCase,
-            IUpdatePersonUseCase updatePersonUseCase)
+            IUpdatePersonUseCase updatePersonUseCase,
+            IDeletePersonUseCase deletePersonUseCase)
         {
             this.addPersonUseCase = addPersonUseCase;
             this.getPersonsUseCase = getPersonsUseCase;
             this.getPersonUseCase = getPersonUseCase;
             this.updatePersonUseCase = updatePersonUseCase;
+            this.deletePersonUseCase = deletePersonUseCase;
         }
 
         [HttpGet("create")]
@@ -106,6 +109,26 @@ namespace MVCPrueba1.Controllers
             this.ViewBag.UpdateResult = true;
 
             return this.View("SinglePerson", personViewModel);
+        }
+
+        [HttpPost("delete/{personId:guid}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeletePerson(Guid personId)
+        {
+            PersonViewModel personViewModel = new PersonViewModel
+            {
+                Id = personId,
+            };
+
+            Result<bool> isDeleted = await this.deletePersonUseCase.Execute(personViewModel)
+                .ConfigureAwait(false);
+
+            if (isDeleted.Success)
+            {
+                return this.RedirectToAction(nameof(this.Index));
+            }
+
+            return this.RedirectToAction(nameof(this.Index));
         }
     }
 }

@@ -26,5 +26,7 @@ namespace MVCPrueba1.Logic.Repositories
         Task<bool> ExistsByDniAndIdAsync(string dni, Guid id);
 
         Task<bool> UpdatePersonAsync(PersonEntity personEntity);
+
+        Task<bool> DeletePersonAsync(PersonEntity personEntity);
     }
 }

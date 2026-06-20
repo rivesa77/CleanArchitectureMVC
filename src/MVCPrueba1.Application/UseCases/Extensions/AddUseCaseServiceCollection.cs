@@ -14,8 +14,9 @@ namespace MVCPrueba1.Logic.UseCases.Extensions
         {
             services
                 .AddScoped<IAddPersonUseCase, AddPersonUseCase>()
-                .AddScoped<IGetPersonsUseCase, GetPersonsUseCase>()
+                .AddScoped<IDeletePersonUseCase, DeletePersonUseCase>()
                 .AddScoped<IGetPersonUseCase, GetPersonUseCase>()
+                .AddScoped<IGetPersonsUseCase, GetPersonsUseCase>()
                 .AddScoped<IUpdatePersonUseCase, UpdatePersonUseCase>();
 
             return services;

@@ -67,7 +67,7 @@ namespace MVCPrueba1.Data.Repositories
 
         public async Task<PersonEntity> GetByIdAndUserIdAsync(Guid id, string userId)
         {
-            if (!string.IsNullOrWhiteSpace(userId) || !string.IsNullOrWhiteSpace(userId))
+            if (id == Guid.Empty || string.IsNullOrWhiteSpace(userId))
             {
                 return default;
             }
@@ -81,6 +81,15 @@ namespace MVCPrueba1.Data.Repositories
         public async Task<bool> UpdatePersonAsync(PersonEntity personEntity)
         {
             this.applicationDbContext.Persons.Update(personEntity);
+
+            await this.applicationDbContext.SaveChangesAsync().ConfigureAwait(false);
+
+            return true;
+        }
+
+        public async Task<bool> DeletePersonAsync(PersonEntity personEntity)
+        {
+            this.applicationDbContext.Persons.Remove(personEntity);
 
             await this.applicationDbContext.SaveChangesAsync().ConfigureAwait(false);
 

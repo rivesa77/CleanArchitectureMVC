@@ -58,9 +58,11 @@
 </form>
 
 
-<a asp-action="delete" asp-controller="Persons" asp-route-PersonName="@Model.Id" type="button" class="btn btn-outline-danger">
-	<i class="bi bi-archive"></i> Delete Person
-</a>
+<form asp-action="DeletePerson" asp-controller="Persons" asp-route-personId="@Model.Id" method="post" class="d-inline">
+	<button type="submit" class="btn btn-outline-danger">
+		<i class="bi bi-archive"></i> Delete Person
+	</button>
+</form>
 
 <a class="btn btn-primary" href="/Persons">
 	<i class="bi bi-archive"></i> Person List	
