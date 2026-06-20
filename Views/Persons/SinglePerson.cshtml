@@ -28,13 +28,15 @@
 		</label>
 		<div class="input-group">
 			<div class="input-group-text">Person DNI</div>
-			<input type="text" asp-for="DNI" class=" form-control" id="inlineFormInputGroupPerson" placeholder="Person DNI">
+			<input type="text" asp-for="DNI" class=" form-control" id="inlineFormInputGroupPerson" placeholder="Person DNI"
+				   required minlength="9" maxlength="9">
 		</div>
 	</div>
 	<div class="col-12">
 		<div class="input-group">
 			<div class="input-group-text">Person Name</div>
-			<input type="text" asp-for="Name" class=" form-control" id="inlineFormInputGroupUsername" placeholder="Person Name">
+			<input type="text" asp-for="Name" class=" form-control" id="inlineFormInputGroupUsername" placeholder="Person Name"
+				   required maxlength="100">
 		</div>
 	</div>
 	<div class="col-12">

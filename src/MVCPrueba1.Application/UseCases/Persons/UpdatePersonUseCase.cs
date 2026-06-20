@@ -29,9 +29,11 @@ namespace MVCPrueba1.Application.UseCases.Persons
 
         public async Task<Result<bool>> Execute(PersonViewModel sourceClass)
         {
-            if (sourceClass?.Id is null || string.IsNullOrWhiteSpace(sourceClass?.DNI))
+            Result<bool> validationResult = Validate(sourceClass);
+
+            if (validationResult.Errors.Any())
             {
-                return Result.Failure<bool>("The person can't be updated");
+                return validationResult;
             }
 
             PersonEntity currentPerson = await this.personRepository
@@ -70,6 +72,31 @@ namespace MVCPrueba1.Application.UseCases.Persons
                 || !string.Equals(sourceClass.Name, currentPerson.Name, StringComparison.Ordinal)
                 || !string.Equals(sourceClass.Phone, currentPerson.Phone, StringComparison.Ordinal)
                 || !string.Equals(sourceClass.Email, currentPerson.Email, StringComparison.Ordinal);
+        }
+
+        private static Result<bool> Validate(PersonViewModel sourceClass)
+        {
+            if (sourceClass?.Id is null || string.IsNullOrWhiteSpace(sourceClass?.DNI))
+            {
+                return Result.Failure<bool>("The person can't be updated");
+            }
+
+            if (sourceClass.DNI.Length != 9)
+            {
+                return Result.Failure<bool>("Person DNI must have 9 characters");
+            }
+
+            if (string.IsNullOrWhiteSpace(sourceClass.Name))
+            {
+                return Result.Failure<bool>("Person name is required");
+            }
+
+            if (sourceClass.Name.Length > 100)
+            {
+                return Result.Failure<bool>("Person name can't have more than 100 characters");
+            }
+
+            return Result.Success(true);
         }
     }
 }
