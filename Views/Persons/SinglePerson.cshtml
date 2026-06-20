@@ -3,19 +3,19 @@
 
 @if (!string.IsNullOrWhiteSpace(@Model.ErrorMessage))
 {
-	<div class="alert alert-primary" role="alert">
+	<div class="alert alert-primary person-message" role="alert">
 		@Model.ErrorMessage
 	</div>
 }
 
 @if (ViewBag.UpdateResult == true)
 {
-	<div class="alert alert-success" role="alert">
+	<div class="alert alert-success person-message" role="alert">
         Update correctly
 	</div>
 }
 
-<div id="noChangesMessage" class="alert alert-info d-none" role="alert">
+<div id="noChangesMessage" class="alert alert-info person-message d-none" role="alert">
 	No changes to update
 </div>
 
@@ -71,6 +71,12 @@
 			const noChangesMessage = document.getElementById('noChangesMessage');
 			const fields = ['DNI', 'Name', 'Phone', 'Email'];
 
+			const hideMessages = () => {
+				document.querySelectorAll('.person-message').forEach((message) => {
+					message.classList.add('d-none');
+				});
+			};
+
 			const initialValues = Object.fromEntries(
 				fields.map((field) => {
 					const input = form.querySelector(`[name="${field}"]`);
@@ -86,8 +92,14 @@
 
 				if (!hasChanges) {
 					event.preventDefault();
+					hideMessages();
 					noChangesMessage.classList.remove('d-none');
 				}
+			});
+
+			fields.forEach((field) => {
+				const input = form.querySelector(`[name="${field}"]`);
+				input?.addEventListener('input', hideMessages);
 			});
 		})();
 	</script>
