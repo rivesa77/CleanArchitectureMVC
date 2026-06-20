@@ -88,7 +88,7 @@ namespace MVCPrueba1.Controllers
             return this.View("SinglePerson", personViewModel);
         }
 
-        [HttpPost("{PersonId}")]
+        [HttpPost]
         public async Task<IActionResult> UpdatePerson(PersonViewModel personViewModel)
         {
             Result<bool> result = await this.updatePersonUseCase.Execute(personViewModel)

@@ -11,12 +11,12 @@
 @if (ViewBag.UpdateResult == true)
 {
 	<div class="alert alert-success" role="alert">
-        "Update correctly"
+        Update correctly
 	</div>
 }
 
-<form asp-action="@Model.Id" asp-controller="Persons"
-	  method="post" class="row row-cols-lg-auto g-3 align-items-center">
+<form asp-action="UpdatePerson" asp-controller="Persons"  method="post"
+	  class="row row-cols-lg-auto g-3 align-items-center">
 
 	<div class="col-12">
 		<label class="visually-hidden" for="PersonDNI">
@@ -47,7 +47,7 @@
 		</div>
 	</div>
 	<div class="col-12">
-		<button type="submit" class="btn btn-primary" class="btn btn-outline-primary">Update Person</button>
+		<button type="submit" class="btn btn-outline-primary">Update Person</button>
 	</div>
 
 </form>
