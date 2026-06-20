@@ -30,7 +30,9 @@ namespace MVCPrueba1.Logic.UseCases.Persons
                 return Result.Failure<bool>("Person DNI is required");
             }
 
-            return await this.ValidatePerson(personViewModel).Bind(x => this.AddPersonToDatabase(personViewModel)).ConfigureAwait(false);
+            return await this.ValidatePerson(personViewModel)
+                .Bind(x => this.AddPersonToDatabase(personViewModel))
+                .ConfigureAwait(false);
         }
 
         private async Task<Result<bool>> ValidatePerson(PersonViewModel personViewModel)
