@@ -5,6 +5,7 @@
 namespace MVCPrueba1.Logic.Converter.PersonsViewModel.ToPersonEntity.Extensions
 {
     using Microsoft.Extensions.DependencyInjection;
+    using MVCPrueba1.Application.Converter.PersonsViewModel.ToPersonEntity.Properties;
     using MVCPrueba1.Logic.Converter.PersonsViewModel.ToPersonEntity.Properties;
 
     internal static class AddPersonViewModelToPersonEntitiesConverterExtension
@@ -19,6 +20,7 @@ namespace MVCPrueba1.Logic.Converter.PersonsViewModel.ToPersonEntity.Extensions
             services
                 .AddScoped<IPersonsViewModelToPersonEntityPorpertyConverter, DniConverter>()
                 .AddScoped<IPersonsViewModelToPersonEntityPorpertyConverter, EmailConverter>()
+                .AddScoped<IPersonsViewModelToPersonEntityPorpertyConverter, IdConverter>()
                 .AddScoped<IPersonsViewModelToPersonEntityPorpertyConverter, NameConverter>()
                 .AddScoped<IPersonsViewModelToPersonEntityPorpertyConverter, PhoneConverter>()
                 .AddScoped<IPersonsViewModelToPersonEntityPorpertyConverter, UserIdConverter>();
