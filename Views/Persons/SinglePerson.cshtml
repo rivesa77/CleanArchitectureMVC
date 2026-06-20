@@ -15,7 +15,11 @@
 	</div>
 }
 
-<form asp-action="UpdatePerson" asp-controller="Persons"  method="post"
+<div id="noChangesMessage" class="alert alert-info d-none" role="alert">
+	No changes to update
+</div>
+
+<form id="updatePersonForm" asp-action="UpdatePerson" asp-controller="Persons" asp-route-personId="@Model.Id" method="post"
 	  class="row row-cols-lg-auto g-3 align-items-center">
 
 	<div class="col-12">
@@ -25,7 +29,6 @@
 		<div class="input-group">
 			<div class="input-group-text">Person DNI</div>
 			<input type="text" asp-for="DNI" class=" form-control" id="inlineFormInputGroupPerson" placeholder="Person DNI">
-			<input type="hidden" asp-for="Id" />
 		</div>
 	</div>
 	<div class="col-12">
@@ -60,3 +63,32 @@
 <a class="btn btn-primary" href="/Persons">
 	<i class="bi bi-archive"></i> Person List	
 </a>
+
+@section Scripts {
+	<script>
+		(() => {
+			const form = document.getElementById('updatePersonForm');
+			const noChangesMessage = document.getElementById('noChangesMessage');
+			const fields = ['DNI', 'Name', 'Phone', 'Email'];
+
+			const initialValues = Object.fromEntries(
+				fields.map((field) => {
+					const input = form.querySelector(`[name="${field}"]`);
+					return [field, input?.value ?? ''];
+				})
+			);
+
+			form.addEventListener('submit', (event) => {
+				const hasChanges = fields.some((field) => {
+					const input = form.querySelector(`[name="${field}"]`);
+					return (input?.value ?? '') !== initialValues[field];
+				});
+
+				if (!hasChanges) {
+					event.preventDefault();
+					noChangesMessage.classList.remove('d-none');
+				}
+			});
+		})();
+	</script>
+}

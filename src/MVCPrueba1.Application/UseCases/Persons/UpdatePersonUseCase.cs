@@ -7,6 +7,7 @@ namespace MVCPrueba1.Application.UseCases.Persons
     using MVCPrueba1.Entities;
     using MVCPrueba1.Logic.Converter.PersonsViewModel.ToPersonEntity;
     using MVCPrueba1.Logic.Repositories;
+    using MVCPrueba1.Logic.UserInfo;
     using MVCPrueba1.Models;
     using ROP;
 
@@ -14,13 +15,16 @@ namespace MVCPrueba1.Application.UseCases.Persons
     {
         private readonly IPersonRepository personRepository;
         private readonly IPersonsViewModelToPersonEntityConverter converter;
+        private readonly IPersonUserDetails personUserDetails;
 
         public UpdatePersonUseCase(
             IPersonRepository personRepository,
-            IPersonsViewModelToPersonEntityConverter converter)
+            IPersonsViewModelToPersonEntityConverter converter,
+            IPersonUserDetails personUserDetails)
         {
             this.personRepository = personRepository;
             this.converter = converter;
+            this.personUserDetails = personUserDetails;
         }
 
         public async Task<Result<bool>> Execute(PersonViewModel sourceClass)
@@ -28,6 +32,20 @@ namespace MVCPrueba1.Application.UseCases.Persons
             if (sourceClass?.Id is null || string.IsNullOrWhiteSpace(sourceClass?.DNI))
             {
                 return Result.Failure<bool>("The person can't be updated");
+            }
+
+            PersonEntity currentPerson = await this.personRepository
+                .GetByIdAndUserIdAsync(sourceClass.Id, this.personUserDetails.UserId)
+                .ConfigureAwait(false);
+
+            if (currentPerson is null)
+            {
+                return Result.Failure<bool>("Person not found");
+            }
+
+            if (!HasChanges(sourceClass, currentPerson))
+            {
+                return Result.Failure<bool>("No changes to update");
             }
 
             bool flagExist = await this.personRepository
@@ -44,6 +62,14 @@ namespace MVCPrueba1.Application.UseCases.Persons
             bool result = await this.personRepository.UpdatePersonAsync(personEntity).ConfigureAwait(false);
 
             return Result.Success(result);
+        }
+
+        private static bool HasChanges(PersonViewModel sourceClass, PersonEntity currentPerson)
+        {
+            return !string.Equals(sourceClass.DNI, currentPerson.DNI, StringComparison.Ordinal)
+                || !string.Equals(sourceClass.Name, currentPerson.Name, StringComparison.Ordinal)
+                || !string.Equals(sourceClass.Phone, currentPerson.Phone, StringComparison.Ordinal)
+                || !string.Equals(sourceClass.Email, currentPerson.Email, StringComparison.Ordinal);
         }
     }
 }

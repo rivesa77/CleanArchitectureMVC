@@ -88,9 +88,11 @@ namespace MVCPrueba1.Controllers
             return this.View("SinglePerson", personViewModel);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UpdatePerson(PersonViewModel personViewModel)
+        [HttpPost("{personId:guid}")]
+        public async Task<IActionResult> UpdatePerson(Guid personId, PersonViewModel personViewModel)
         {
+            personViewModel.Id = personId;
+
             Result<bool> result = await this.updatePersonUseCase.Execute(personViewModel)
                 .ConfigureAwait(false);
 
