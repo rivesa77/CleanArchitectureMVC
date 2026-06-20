@@ -22,7 +22,7 @@ builder.Services
     .AddControllersWithViews();
 
 builder.Services
-    .AddLogic()
+    .AddApplication()
     .AddInfrastructure(connectionString);
 
 var app = builder.Build();

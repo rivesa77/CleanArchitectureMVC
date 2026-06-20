@@ -1,4 +1,4 @@
-﻿// <copyright file="AddLogicServiceCollection.cs" company="Ricardo">
+﻿// <copyright file="AddApplicationExtensions.cs" company="Ricardo">
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
@@ -8,9 +8,9 @@ namespace MVCPrueba1.Logic.Extensions
     using MVCPrueba1.Logic.Converter.Extensions;
     using MVCPrueba1.Logic.UseCases.Extensions;
 
-    public static class AddLogicServiceCollection
+    public static class AddApplicationExtensions
     {
-        public static IServiceCollection AddLogic(this IServiceCollection services)
+        public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services
                 .AddConverters()

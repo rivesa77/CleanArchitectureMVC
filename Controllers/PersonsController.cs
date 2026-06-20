@@ -6,6 +6,7 @@ namespace MVCPrueba1.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using MVCPrueba1.Application.UseCases.Persons;
     using MVCPrueba1.Logic.UseCases.Persons;
     using MVCPrueba1.Models;
     using ROP;
@@ -16,13 +17,19 @@ namespace MVCPrueba1.Controllers
     {
         private readonly IAddPersonUseCase addPersonUseCase;
         private readonly IGetPersonsUseCase getPersonsUseCase;
+        private readonly IGetPersonUseCase getPersonUseCase;
+        private readonly IUpdatePersonUseCase updatePersonUseCase;
 
         public PersonsController(
             IAddPersonUseCase addPersonUseCase,
-            IGetPersonsUseCase getPersonsUseCase)
+            IGetPersonsUseCase getPersonsUseCase,
+            IGetPersonUseCase getPersonUseCase,
+            IUpdatePersonUseCase updatePersonUseCase)
         {
             this.addPersonUseCase = addPersonUseCase;
             this.getPersonsUseCase = getPersonsUseCase;
+            this.getPersonUseCase = getPersonUseCase;
+            this.updatePersonUseCase = updatePersonUseCase;
         }
 
         [HttpGet("create")]
@@ -55,17 +62,48 @@ namespace MVCPrueba1.Controllers
             Result<IEnumerable<PersonViewModel>> result = await this.getPersonsUseCase.Execute()
                 .ConfigureAwait(false);
 
-            if (result.Errors.Any())
+            PersonCollectionViewModel personCollectionViewModel = new PersonCollectionViewModel();
+
+            if (!result.Errors.Any())
             {
-                return this.View("Index", new List<PersonViewModel>());
+                personCollectionViewModel.Persons = result.Value;
             }
 
-            PersonCollectionViewModel personCollectionViewModel = new PersonCollectionViewModel()
-            {
-                Persons = result.Value,
-            };
-
             return this.View("Index", personCollectionViewModel);
+        }
+
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetPerson(Guid id)
+        {
+            Result<PersonViewModel> result = await this.getPersonUseCase.Execute(id)
+                .ConfigureAwait(false);
+
+            PersonViewModel personViewModel = result.Value;
+
+            if (result.Errors.Any())
+            {
+                personViewModel.ErrorMessage = result.Errors.First().Message;
+            }
+
+            return this.View("SinglePerson", personViewModel);
+        }
+
+        [HttpPost("{PersonId}")]
+        public async Task<IActionResult> UpdatePerson(PersonViewModel personViewModel)
+        {
+            Result<bool> result = await this.updatePersonUseCase.Execute(personViewModel)
+                .ConfigureAwait(false);
+
+            if (result.Errors.Any())
+            {
+                personViewModel.ErrorMessage = result.Errors.First().Message;
+
+                return this.View("SinglePerson", personViewModel);
+            }
+
+            this.ViewBag.UpdateResult = true;
+
+            return this.View("SinglePerson", personViewModel);
         }
     }
 }
