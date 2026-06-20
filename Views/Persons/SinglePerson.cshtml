@@ -11,7 +11,7 @@
 @if (ViewBag.UpdateResult == true)
 {
 	<div class="alert alert-success" role="alert">
-        "Update Person Success"
+        "Update correctly"
 	</div>
 }
 
@@ -55,4 +55,8 @@
 
 <a asp-action="delete" asp-controller="Persons" asp-route-PersonName="@Model.Id" type="button" class="btn btn-outline-danger">
 	<i class="bi bi-archive"></i> Delete Person
+</a>
+
+<a class="btn btn-primary" href="/Persons">
+	<i class="bi bi-archive"></i> Person List	
 </a>
