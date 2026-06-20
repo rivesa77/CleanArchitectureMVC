@@ -7,7 +7,6 @@ namespace MVCPrueba1.Application.UseCases.Persons
     using MVCPrueba1.Entities;
     using MVCPrueba1.Logic.Converter.PersonsViewModel.ToPersonEntity;
     using MVCPrueba1.Logic.Repositories;
-    using MVCPrueba1.Logic.UserInfo;
     using MVCPrueba1.Models;
     using ROP;
 
@@ -15,16 +14,13 @@ namespace MVCPrueba1.Application.UseCases.Persons
     {
         private readonly IPersonRepository personRepository;
         private readonly IPersonsViewModelToPersonEntityConverter converter;
-        private readonly IPersonUserDetails personUserDetails;
 
         public UpdatePersonUseCase(
             IPersonRepository personRepository,
-            IPersonsViewModelToPersonEntityConverter converter,
-            IPersonUserDetails personUserDetails)
+            IPersonsViewModelToPersonEntityConverter converter)
         {
             this.personRepository = personRepository;
             this.converter = converter;
-            this.personUserDetails = personUserDetails;
         }
 
         public async Task<Result<bool>> Execute(PersonViewModel sourceClass)
