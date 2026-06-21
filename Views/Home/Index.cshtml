@@ -9,7 +9,7 @@
 
 @if (User.Identity?.IsAuthenticated ?? false)
 {
-    <a asp-action="create" asp-controller="Persons" class="btn btn-primary">Create Person</a>
+    <a asp-action="create" asp-controller="CreatePerson" class="btn btn-primary">Create Person</a>
 
     <a href="Persons/" class="btn btn-secondary">Listado</a>
     

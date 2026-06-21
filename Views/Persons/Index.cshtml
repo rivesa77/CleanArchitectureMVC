@@ -19,12 +19,12 @@
 				<td>@person.Email</td>
 				<td>@person.Phone</td>
 				<td>
-					<form asp-action="DeletePerson" asp-controller="Persons" asp-route-personId="@person.Id" method="post" class="d-inline">
+					<form asp-action="DeletePerson" asp-controller="DeletePerson" asp-route-personId="@person.Id" method="post" class="d-inline">
 						<button type="submit" class="btn btn-outline-danger">
 							<i class="bi bi-archive"></i>
 						</button>
 					</form>
-					<a asp-action="GetPerson" asp-controller="persons" asp-route-id="@person.Id" type="button" class="btn btn-outline-primary">
+					<a asp-action="GetPerson" asp-controller="GetPerson" asp-route-id="@person.Id" type="button" class="btn btn-outline-primary">
 						<i class="bi bi-pencil"></i>
 					</a>
 				</td>
@@ -33,5 +33,5 @@
 	</tbody>
 </table>
 
-<a asp-action="create" asp-controller="Persons" class="btn btn-primary">Create Person</a>
+<a asp-action="Create" asp-controller="CreatePerson" class="btn btn-primary">Create Person</a>
 
