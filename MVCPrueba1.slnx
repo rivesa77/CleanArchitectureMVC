@@ -1,6 +1,7 @@
 <Solution>
   <Project Path="MVCPrueba1.csproj" />
   <Project Path="src/MVCPrueba1.Application/MVCPrueba1.Application.csproj" />
+  <Project Path="src/MVCPrueba1.Application/Tests/Application.Tests.csproj" Id="85442eb0-d285-491b-9619-78689ea7f110" />
   <Project Path="src/MVCPrueba1.Domain/MVCPrueba1.Domain.csproj" />
   <Project Path="src/MVCPrueba1.Infrastructure/MVCPrueba1.Infrastructure.csproj" />
 </Solution>
