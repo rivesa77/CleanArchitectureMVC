@@ -86,12 +86,146 @@ function Convert-ToBoolean {
     return $Value -eq 'true' -or $Value -eq 'True' -or $Value -eq '1'
 }
 
+function Normalize-PathArgument {
+    param([string]$Value)
+
+    return $Value.Trim().Trim('"')
+}
+
+function Get-RepositorySourceFiles {
+    param([string]$RootPath)
+
+    $excludedDirectoryNames = @('bin', 'obj', '.git', '.vs')
+
+    return Get-ChildItem -Path $RootPath -Filter '*.cs' -Recurse -File |
+        Where-Object {
+            $directoryParts = $_.DirectoryName -split '[\\/]'
+            -not ($directoryParts | Where-Object { $excludedDirectoryNames -contains $_ })
+        } |
+        ForEach-Object { $_.FullName }
+}
+
+function Update-UsingNamespaces {
+    param(
+        [string]$RootPath,
+        [object[]]$NamespaceMappings
+    )
+
+    if ($NamespaceMappings.Count -eq 0) {
+        return
+    }
+
+    $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+    $files = Get-RepositorySourceFiles -RootPath $RootPath
+
+    foreach ($file in $files) {
+        $content = Get-Content -LiteralPath $file -Raw
+
+        $updatedContent = $content
+        $changed = $false
+
+        foreach ($mapping in $NamespaceMappings) {
+            $oldNamespace = [regex]::Escape($mapping.OldNamespace)
+            $newNamespace = $mapping.NewNamespace
+            $usingPattern = "(?m)^(\s*(?:global\s+)?using\s+(?:static\s+)?){0}(?=\.|\s*;)" -f $oldNamespace
+            $replacedContent = [regex]::Replace($updatedContent, $usingPattern, ('$1' + $newNamespace))
+            $qualifiedNamePattern = "{0}(?=\.|`")" -f $oldNamespace
+            $replacedContent = [regex]::Replace($replacedContent, $qualifiedNamePattern, $newNamespace)
+
+            if ($replacedContent -ne $updatedContent) {
+                $changed = $true
+                $updatedContent = $replacedContent
+            }
+        }
+
+        if ($changed) {
+            [System.IO.File]::WriteAllText($file, $updatedContent, $utf8NoBom)
+            $relativePath = Get-RelativePath -BasePath $RootPath -TargetPath $file
+            Write-Output "$file(1,1): warning NS0002: Updated using directives in '$relativePath' after namespace autofix."
+        }
+    }
+}
+
+function Remove-RedundantUsingDirectives {
+    param([string]$Content)
+
+    $namespaceMatch = [regex]::Match($Content, '(?m)^\s*namespace\s+([A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*)\s*(?:[;{])')
+    $currentNamespace = $null
+
+    if ($namespaceMatch.Success) {
+        $currentNamespace = $namespaceMatch.Groups[1].Value
+    }
+
+    $newline = "`r`n"
+
+    if ($Content.Contains("`n") -and -not $Content.Contains("`r`n")) {
+        $newline = "`n"
+    }
+
+    $lines = $Content -split "`r`n|`n|`r", -1
+    $seenUsings = @{}
+    $changed = $false
+    $keptLines = New-Object System.Collections.Generic.List[string]
+
+    foreach ($line in $lines) {
+        $usingMatch = [regex]::Match($line, '^\s*(global\s+)?using\s+([A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*)\s*;\s*$')
+
+        if ($usingMatch.Success) {
+            $isGlobal = -not [string]::IsNullOrWhiteSpace($usingMatch.Groups[1].Value)
+            $usingNamespace = $usingMatch.Groups[2].Value
+            $key = "$isGlobal|$usingNamespace"
+
+            if ($usingNamespace -eq $currentNamespace -or $seenUsings.ContainsKey($key)) {
+                $changed = $true
+                continue
+            }
+
+            $seenUsings[$key] = $true
+        }
+
+        $keptLines.Add($line)
+    }
+
+    return [PSCustomObject]@{
+        Content = [string]::Join($newline, $keptLines)
+        Changed = $changed
+    }
+}
+
+function Optimize-UsingDirectives {
+    param([string]$RootPath)
+
+    $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+    $files = Get-RepositorySourceFiles -RootPath $RootPath
+
+    foreach ($file in $files) {
+        $content = Get-Content -LiteralPath $file -Raw
+
+        if (Test-IsGeneratedFile -FilePath $file -Content $content) {
+            continue
+        }
+
+        $cleanupResult = Remove-RedundantUsingDirectives -Content $content
+
+        if ($cleanupResult.Changed) {
+            [System.IO.File]::WriteAllText($file, $cleanupResult.Content, $utf8NoBom)
+            $relativePath = Get-RelativePath -BasePath $RootPath -TargetPath $file
+            Write-Output "$file(1,1): warning NS0003: Removed duplicate or redundant using directives in '$relativePath'."
+        }
+    }
+}
+
+$ProjectPath = Normalize-PathArgument $ProjectPath
+$ProjectDir = Normalize-PathArgument $ProjectDir
+$SourceFilesPath = Normalize-PathArgument $SourceFilesPath
+
 if ([string]::IsNullOrWhiteSpace($RootNamespace)) {
     $RootNamespace = [System.IO.Path]::GetFileNameWithoutExtension($ProjectPath)
 }
 
 $shouldAutoFix = Convert-ToBoolean $AutoFix
 $projectDirectory = [System.IO.Path]::GetFullPath($ProjectDir)
+$repositoryDirectory = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $excludedDirectories = @(
     [System.IO.Path]::Combine($projectDirectory, 'bin'),
     [System.IO.Path]::Combine($projectDirectory, 'obj')
@@ -107,6 +241,7 @@ $sourceFiles = Get-Content -LiteralPath $SourceFilesPath |
     }
 
 $hasErrors = $false
+$namespaceMappings = @()
 
 foreach ($file in $sourceFiles) {
     $content = Get-Content -LiteralPath $file -Raw
@@ -134,6 +269,10 @@ foreach ($file in $sourceFiles) {
             $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 
             [System.IO.File]::WriteAllText($file, $updatedContent, $utf8NoBom)
+            $namespaceMappings += [PSCustomObject]@{
+                OldNamespace = $actualNamespace
+                NewNamespace = $expectedNamespace
+            }
             Write-Output "$file($lineNumber,1): warning NS0001: $relativePath namespace '$actualNamespace' was updated to '$expectedNamespace'."
 
             continue
@@ -142,6 +281,11 @@ foreach ($file in $sourceFiles) {
         $hasErrors = $true
         Write-Output "$file($lineNumber,1): error NS0001: $relativePath namespace '$actualNamespace' does not match folder path. Suggested fix: replace it with 'namespace $expectedNamespace'."
     }
+}
+
+if ($shouldAutoFix) {
+    Update-UsingNamespaces -RootPath $repositoryDirectory -NamespaceMappings $namespaceMappings
+    Optimize-UsingDirectives -RootPath $repositoryDirectory
 }
 
 if ($hasErrors) {
