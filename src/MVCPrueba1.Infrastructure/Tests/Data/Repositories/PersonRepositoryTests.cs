@@ -28,6 +28,7 @@ namespace Infrastructure.Tests.Data.Repositories
         [TestMethod]
         [DataRow(PersonEntityConstants.Dni, true)]
         [DataRow(PersonEntityConstants.AnotherDni, false)]
+        [DataRow(default, false)]
         [DataRow("", false)]
         public async Task SaveChangesAsync_WithValues_ReturnsExpectedResult(
             string dni,

@@ -19,34 +19,41 @@ namespace MVCPrueba1.Infrastructure.Data.Repositories
 
         public async Task<bool> ExistsByDniAsync(string dni)
         {
-            string normalizedDni = dni?.Trim().ToUpperInvariant() ?? string.Empty;
+            bool isNormalizedDni = this.NormalizeDni(ref dni);
 
-            if (string.IsNullOrWhiteSpace(normalizedDni))
+            if (!isNormalizedDni)
             {
                 return false;
             }
 
             return await this.applicationDbContext.Persons
-                .AnyAsync(p => p.DNI == normalizedDni)
+                .AsNoTracking()
+                .AnyAsync(p => p.DNI == dni)
                 .ConfigureAwait(false);
         }
 
         public async Task<bool> ExistsByDniAndIdAsync(string dni, Guid id)
         {
-            string normalizedDni = dni?.Trim().ToUpperInvariant() ?? string.Empty;
+            bool isNormalizedDni = this.NormalizeDni(ref dni);
 
-            if (string.IsNullOrWhiteSpace(normalizedDni))
+            if (!isNormalizedDni)
             {
                 return false;
             }
 
             return await this.applicationDbContext.Persons
-                .AnyAsync(p => p.DNI == normalizedDni && p.Id != id)
+                .AsNoTracking()
+                .AnyAsync(p => p.DNI == dni && p.Id != id)
                 .ConfigureAwait(false);
         }
 
         public async Task<bool> AddAsync(PersonEntity personEntity)
         {
+            if (personEntity is null)
+            {
+                return false;
+            }
+
             await this.applicationDbContext.AddAsync(personEntity).ConfigureAwait(false);
             int result = await this.applicationDbContext.SaveChangesAsync().ConfigureAwait(false);
 
@@ -61,8 +68,8 @@ namespace MVCPrueba1.Infrastructure.Data.Repositories
             }
 
             return await this.applicationDbContext.Persons
-                .Where(p => p.UserId == userId)
                 .AsNoTracking()
+                .Where(p => p.UserId == userId)
                 .ToListAsync()
                 .ConfigureAwait(false);
         }
@@ -82,6 +89,11 @@ namespace MVCPrueba1.Infrastructure.Data.Repositories
 
         public async Task<bool> UpdatePersonAsync(PersonEntity personEntity)
         {
+            if (personEntity is null)
+            {
+                return false;
+            }
+
             this.applicationDbContext.Persons.Update(personEntity);
 
             await this.applicationDbContext.SaveChangesAsync().ConfigureAwait(false);
@@ -91,9 +103,26 @@ namespace MVCPrueba1.Infrastructure.Data.Repositories
 
         public async Task<bool> DeletePersonAsync(PersonEntity personEntity)
         {
+            if (personEntity is null)
+            {
+                return false;
+            }
+
             this.applicationDbContext.Persons.Remove(personEntity);
 
             await this.applicationDbContext.SaveChangesAsync().ConfigureAwait(false);
+
+            return true;
+        }
+
+        private bool NormalizeDni(ref string dni)
+        {
+            string normalizedDni = dni?.Trim().ToUpperInvariant() ?? default;
+
+            if (string.IsNullOrWhiteSpace(normalizedDni))
+            {
+                return false;
+            }
 
             return true;
         }

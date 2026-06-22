@@ -29,7 +29,7 @@ namespace MVCPrueba1.Application.UseCases.Persons.Creates
 
         public async Task<Result<bool>> Execute(PersonViewModel personViewModel)
         {
-            if (string.IsNullOrWhiteSpace(personViewModel.DNI))
+            if (string.IsNullOrWhiteSpace(personViewModel?.DNI))
             {
                 return Result.Failure<bool>(DniRequiredMessage);
             }
