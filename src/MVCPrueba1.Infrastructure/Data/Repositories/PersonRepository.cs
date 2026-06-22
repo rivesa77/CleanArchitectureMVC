@@ -45,10 +45,12 @@ namespace MVCPrueba1.Infrastructure.Data.Repositories
                 .ConfigureAwait(false);
         }
 
-        public async Task AddAsync(PersonEntity personEntity)
+        public async Task<bool> AddAsync(PersonEntity personEntity)
         {
             await this.applicationDbContext.AddAsync(personEntity).ConfigureAwait(false);
-            await this.applicationDbContext.SaveChangesAsync().ConfigureAwait(false);
+            int result = await this.applicationDbContext.SaveChangesAsync().ConfigureAwait(false);
+
+            return result > 0;
         }
 
         public async Task<IEnumerable<PersonEntity>> GetByUserIdAsync(string userId)

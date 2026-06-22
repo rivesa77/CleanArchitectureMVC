@@ -17,7 +17,7 @@ namespace MVCPrueba1.Application.Repositories
     {
         Task<bool> ExistsByDniAsync(string dni);
 
-        Task AddAsync(PersonEntity personEntity);
+        Task<bool> AddAsync(PersonEntity personEntity);
 
         Task<IEnumerable<PersonEntity>> GetByUserIdAsync(string userId);
 

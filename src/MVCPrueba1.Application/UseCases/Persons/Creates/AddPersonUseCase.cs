@@ -12,6 +12,10 @@ namespace MVCPrueba1.Application.UseCases.Persons.Creates
 
     internal class AddPersonUseCase : IAddPersonUseCase
     {
+        private const string DniRequiredMessage = "Person DNI is required";
+        private const string DniAlreadyExistMessage = "Person DNI Already Exist";
+        private const string ConverterErrorMessage = "Conversion from PersonViewModel to PersonEntity failed, PersonEntity is null";
+
         private readonly IPersonRepository personRepository;
         private readonly IPersonsViewModelToPersonEntityConverter converter;
 
@@ -27,7 +31,7 @@ namespace MVCPrueba1.Application.UseCases.Persons.Creates
         {
             if (string.IsNullOrWhiteSpace(personViewModel.DNI))
             {
-                return Result.Failure<bool>("Person DNI is required");
+                return Result.Failure<bool>(DniRequiredMessage);
             }
 
             return await this.ValidatePerson(personViewModel)
@@ -37,13 +41,13 @@ namespace MVCPrueba1.Application.UseCases.Persons.Creates
 
         private async Task<Result<bool>> ValidatePerson(PersonViewModel personViewModel)
         {
-            bool flagExist = await this.personRepository
+            bool personExist = await this.personRepository
                 .ExistsByDniAsync(personViewModel.DNI)
                 .ConfigureAwait(false);
 
-            if (flagExist)
+            if (personExist)
             {
-                return Result.Failure<bool>("Person DNI Already Exist");
+                return Result.Failure<bool>(DniAlreadyExistMessage);
             }
 
             return true;
@@ -55,12 +59,12 @@ namespace MVCPrueba1.Application.UseCases.Persons.Creates
 
             if (personEntity is null)
             {
-                return Result.Failure<bool>("Conversion from PersonViewModel to PersonEntity failed, PersonEntity is null");
+                return Result.Failure<bool>(ConverterErrorMessage);
             }
 
-            await this.personRepository.AddAsync(personEntity).ConfigureAwait(false);
+            bool result = await this.personRepository.AddAsync(personEntity).ConfigureAwait(false);
 
-            return true;
+            return result;
         }
     }
 }
