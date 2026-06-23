@@ -2,13 +2,13 @@
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
-namespace Ricardo.Application.UseCases.Persons.Gets
+namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Gets
 {
-    using Ricardo.Application.Converter.PersonEntities.ToPersonViewModel;
-    using Ricardo.Application.Models;
-    using Ricardo.Application.Repositories;
-    using Ricardo.Application.UserInfo;
-    using Ricardo.Domain.Entities;
+    using Ricardo.MVCPrueba1.Application.Converter.PersonEntities.ToPersonViewModel;
+    using Ricardo.MVCPrueba1.Application.Models;
+    using Ricardo.MVCPrueba1.Application.Repositories;
+    using Ricardo.MVCPrueba1.Application.UserInfo;
+    using Ricardo.MVCPrueba1.Domain.Entities;
     using ROP;
 
     internal class GetPersonsUseCase : PersonUseCaseBase, IGetPersonsUseCase

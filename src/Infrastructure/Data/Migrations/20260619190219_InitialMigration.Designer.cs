@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Ricardo.Infrastructure.Data;
+using Ricardo.MVCPrueba1.Infrastructure.Data;
 
 #nullable disable
 
-namespace Ricardo.Infrastructure.Data.Migrations
+namespace Ricardo.MVCPrueba1.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20260619190219_InitialMigration")]
@@ -25,7 +25,7 @@ namespace Ricardo.Infrastructure.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Ricardo.Domain.Entities.PersonEntity", b =>
+            modelBuilder.Entity("Ricardo.MVCPrueba1.Domain.Entities.PersonEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -258,7 +258,7 @@ namespace Ricardo.Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Ricardo.Domain.Entities.PersonEntity", b =>
+            modelBuilder.Entity("Ricardo.MVCPrueba1.Domain.Entities.PersonEntity", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()

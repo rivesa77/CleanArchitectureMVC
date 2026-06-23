@@ -2,9 +2,9 @@
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
-namespace Ricardo.Application.UseCases.Persons.Deletes
+namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Deletes
 {
-    using Ricardo.Application.Models;
+    using Ricardo.MVCPrueba1.Application.Models;
 
     public interface IDeletePersonUseCase : IPersonUseCase<PersonViewModel, bool>
     {

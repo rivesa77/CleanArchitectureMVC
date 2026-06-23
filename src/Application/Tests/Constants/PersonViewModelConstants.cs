@@ -2,7 +2,7 @@
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
-namespace Ricardo.Application.Tests.Constants
+namespace Ricardo.MVCPrueba1.Application.Tests.Constants
 {
     internal static class PersonViewModelConstants
     {

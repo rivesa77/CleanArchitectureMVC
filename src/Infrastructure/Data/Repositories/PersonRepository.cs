@@ -2,11 +2,11 @@
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
-namespace Ricardo.Infrastructure.Data.Repositories
+namespace Ricardo.MVCPrueba1.Infrastructure.Data.Repositories
 {
     using Microsoft.EntityFrameworkCore;
-    using Ricardo.Application.Repositories;
-    using Ricardo.Domain.Entities;
+    using Ricardo.MVCPrueba1.Application.Repositories;
+    using Ricardo.MVCPrueba1.Domain.Entities;
 
     internal class PersonRepository : IPersonRepository
     {

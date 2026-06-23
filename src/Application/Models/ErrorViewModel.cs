@@ -2,7 +2,7 @@
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
-namespace Ricardo.Application.Models
+namespace Ricardo.MVCPrueba1.Application.Models
 {
     public class ErrorViewModel
     {

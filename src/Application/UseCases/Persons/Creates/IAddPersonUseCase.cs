@@ -2,9 +2,9 @@
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
-namespace Ricardo.Application.UseCases.Persons.Creates
+namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Creates
 {
-    using Ricardo.Application.Models;
+    using Ricardo.MVCPrueba1.Application.Models;
 
     public interface IAddPersonUseCase : IPersonUseCase<PersonViewModel, bool>
     {

@@ -2,7 +2,7 @@
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
-namespace Ricardo.Infrastructure.Tests.Constants
+namespace Ricardo.MVCPrueba1.Infrastructure.Tests.Constants
 {
     internal static class PersonEntityConstants
     {

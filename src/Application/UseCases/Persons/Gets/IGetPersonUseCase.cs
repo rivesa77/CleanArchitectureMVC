@@ -2,9 +2,9 @@
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
-namespace Ricardo.Application.UseCases.Persons.Gets
+namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Gets
 {
-    using Ricardo.Application.Models;
+    using Ricardo.MVCPrueba1.Application.Models;
 
     public interface IGetPersonUseCase : IPersonUseCase<Guid, PersonViewModel>
     {

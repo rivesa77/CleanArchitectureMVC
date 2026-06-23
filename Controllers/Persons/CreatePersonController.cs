@@ -6,8 +6,8 @@ namespace Ricardo.MVCPrueba1.Controllers.Persons
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Ricardo.Application.Models;
-    using Ricardo.Application.UseCases.Persons.Creates;
+    using Ricardo.MVCPrueba1.Application.Models;
+    using Ricardo.MVCPrueba1.Application.UseCases.Persons.Creates;
     using ROP;
 
     [Authorize]

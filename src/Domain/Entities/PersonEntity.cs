@@ -2,7 +2,7 @@
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
-namespace Ricardo.Domain.Entities
+namespace Ricardo.MVCPrueba1.Domain.Entities
 {
     public class PersonEntity
     {

@@ -2,9 +2,9 @@
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
-namespace Ricardo.Application.Repositories
+namespace Ricardo.MVCPrueba1.Application.Repositories
 {
-    using Ricardo.Domain.Entities;
+    using Ricardo.MVCPrueba1.Domain.Entities;
 
     /// <summary>
     ///     Define las operaciones de persistencia necesarias para trabajar con personas.

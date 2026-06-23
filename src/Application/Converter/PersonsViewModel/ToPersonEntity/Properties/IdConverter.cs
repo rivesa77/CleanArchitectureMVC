@@ -2,12 +2,12 @@
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
-namespace Ricardo.Application.Converter.PersonsViewModel.ToPersonEntity.Properties
+namespace Ricardo.MVCPrueba1.Application.Converter.PersonsViewModel.ToPersonEntity.Properties
 {
     using System;
-    using Ricardo.Application.Models;
     using Ricardo.CommonLibraries.Converters;
-    using Ricardo.Domain.Entities;
+    using Ricardo.MVCPrueba1.Application.Models;
+    using Ricardo.MVCPrueba1.Domain.Entities;
 
     internal class IdConverter : ClassPropertyConverterBase<
         PersonViewModel,

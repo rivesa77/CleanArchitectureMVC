@@ -6,7 +6,7 @@ namespace Ricardo.MVCPrueba1.Controllers
 {
     using System.Diagnostics;
     using Microsoft.AspNetCore.Mvc;
-    using Ricardo.Application.Models;
+    using Ricardo.MVCPrueba1.Application.Models;
 
     public class HomeController : Controller
     {

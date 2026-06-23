@@ -5,9 +5,9 @@
 #pragma warning disable SA1200 // Using directives should be placed correctly
 
 using Microsoft.EntityFrameworkCore;
-using Ricardo.Application.Extensions;
-using Ricardo.Infrastructure.Data;
-using Ricardo.Infrastructure.Extensions;
+using Ricardo.MVCPrueba1.Application.Extensions;
+using Ricardo.MVCPrueba1.Infrastructure.Data;
+using Ricardo.MVCPrueba1.Infrastructure.Extensions;
 
 #pragma warning restore SA1200 // Using directives should be placed correctly
 

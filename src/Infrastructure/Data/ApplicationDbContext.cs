@@ -2,12 +2,12 @@
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
-namespace Ricardo.Infrastructure.Data
+namespace Ricardo.MVCPrueba1.Infrastructure.Data
 {
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
-    using Ricardo.Domain.Entities;
+    using Ricardo.MVCPrueba1.Domain.Entities;
 
     public class ApplicationDbContext : IdentityDbContext
     {
