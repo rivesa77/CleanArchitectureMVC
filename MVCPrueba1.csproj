@@ -43,8 +43,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="src\MVCPrueba1.Application\Application.csproj" />
-    <ProjectReference Include="src\MVCPrueba1.Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="src\Application\Application.csproj" />
+    <ProjectReference Include="src\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

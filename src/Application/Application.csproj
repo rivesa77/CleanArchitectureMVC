@@ -24,12 +24,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MVCPrueba1.Domain\Domain.csproj" />
+    <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
 	  <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-		  <_Parameter1>MVCPrueba1.Application.Tests</_Parameter1>
+		  <_Parameter1>Application.Tests</_Parameter1>
 	  </AssemblyAttribute>
   	  <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
  		  <_Parameter1>DynamicProxyGenAssembly2</_Parameter1>

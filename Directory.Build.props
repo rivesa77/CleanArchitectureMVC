@@ -1,29 +1,29 @@
 <Project>
-  <PropertyGroup>
-    <NamespacePrefix>Ricardo</NamespacePrefix>
-  </PropertyGroup>
+	<PropertyGroup>
+		<NamespacePrefix>Ricardo</NamespacePrefix>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'MVCPrueba1'">
-    <RootNamespace>$(NamespacePrefix).MVCPrueba1</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(MSBuildProjectName)' == 'MVCPrueba1'">
+		<RootNamespace>$(NamespacePrefix).MVCPrueba1</RootNamespace>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Application'">
-    <RootNamespace>$(NamespacePrefix).MVCPrueba1.Application</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(MSBuildProjectName)' == 'Application'">
+		<RootNamespace>$(NamespacePrefix).Application</RootNamespace>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Application.Tests'">
-    <RootNamespace>$(NamespacePrefix).MVCPrueba1.Application.Tests</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(MSBuildProjectName)' == 'Application.Tests'">
+		<RootNamespace>$(NamespacePrefix).Application.Tests</RootNamespace>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Domain'">
-    <RootNamespace>$(NamespacePrefix).MVCPrueba1.Domain</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(MSBuildProjectName)' == 'Domain'">
+		<RootNamespace>$(NamespacePrefix).Domain</RootNamespace>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Infrastructure'">
-    <RootNamespace>$(NamespacePrefix).MVCPrueba1.Infrastructure</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(MSBuildProjectName)' == 'Infrastructure'">
+		<RootNamespace>$(NamespacePrefix).Infrastructure</RootNamespace>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Infrastructure.Tests'">
-    <RootNamespace>$(NamespacePrefix).MVCPrueba1.Infrastructure.Tests</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(MSBuildProjectName)' == 'Infrastructure.Tests'">
+		<RootNamespace>$(NamespacePrefix).Infrastructure.Tests</RootNamespace>
+	</PropertyGroup>
 </Project>

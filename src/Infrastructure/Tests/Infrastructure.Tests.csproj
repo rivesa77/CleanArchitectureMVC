@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<AssemblyName>MVCPrueba1.Infrastructure.Tests</AssemblyName>
+		<AssemblyName>Infrastructure.Tests</AssemblyName>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<IsPackable>false</IsPackable>
@@ -29,8 +29,8 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Infrastructure.csproj" />
-		<ProjectReference Include="..\..\MVCPrueba1.Application\Application.csproj" />
-		<ProjectReference Include="..\..\MVCPrueba1.Domain\Domain.csproj" />
+		<ProjectReference Include="..\..\Application\Application.csproj" />
+		<ProjectReference Include="..\..\Domain\Domain.csproj" />
 	</ItemGroup>
 
 

@@ -11,9 +11,9 @@ MVCPrueba1
 |-- Views
 |-- wwwroot
 `-- src
-    |-- MVCPrueba1.Domain
-    |-- MVCPrueba1.Application
-    `-- MVCPrueba1.Infrastructure
+    |-- Domain
+    |-- Application
+    `-- Infrastructure
 ```
 
 ## MVCPrueba1
@@ -29,7 +29,7 @@ Responsabilidades:
 
 Este proyecto puede conocer `Application` e `Infrastructure`, porque es el punto donde se conectan todas las piezas.
 
-## MVCPrueba1.Domain
+## Domain
 
 Capa de dominio.
 
@@ -42,10 +42,10 @@ Responsabilidades:
 Ejemplo actual:
 
 ```text
-src/MVCPrueba1.Domain/Entities/PersonEntity.cs
+src/Domain/Entities/PersonEntity.cs
 ```
 
-## MVCPrueba1.Application
+## Application
 
 Capa de aplicacion.
 
@@ -61,12 +61,12 @@ Esta capa depende de `Domain`, pero no debe depender de `Infrastructure`, EF Cor
 Ejemplos:
 
 ```text
-src/MVCPrueba1.Application/UseCases
-src/MVCPrueba1.Application/Repositories/IPersonRepository.cs
-src/MVCPrueba1.Application/Models
+src/Application/UseCases
+src/Application/Repositories/IPersonRepository.cs
+src/Application/Models
 ```
 
-## MVCPrueba1.Infrastructure
+## Infrastructure
 
 Capa de infraestructura.
 
@@ -84,10 +84,10 @@ Esta capa implementa contratos definidos en `Application`.
 Ejemplos:
 
 ```text
-src/MVCPrueba1.Infrastructure/Data/ApplicationDbContext.cs
-src/MVCPrueba1.Infrastructure/Data/Repositories/PersonRepository.cs
-src/MVCPrueba1.Infrastructure/Data/Migrations
-src/MVCPrueba1.Infrastructure/UserInfo/PersonUserDetails.cs
+src/Infrastructure/Data/ApplicationDbContext.cs
+src/Infrastructure/Data/Repositories/PersonRepository.cs
+src/Infrastructure/Data/Migrations
+src/Infrastructure/UserInfo/PersonUserDetails.cs
 ```
 
 ## Direccion de dependencias
@@ -116,7 +116,7 @@ Despues de separar la solucion en capas, las migraciones ya no pertenecen al pro
 Ahora viven en:
 
 ```text
-src/MVCPrueba1.Infrastructure
+src/Infrastructure
 ```
 
 El proyecto que arranca la aplicacion sigue siendo:
@@ -135,13 +135,13 @@ Por eso los comandos de EF deben indicar siempre:
 Desde la raiz de la solucion:
 
 ```powershell
-dotnet ef migrations add NombreDeLaMigracion --project "src\MVCPrueba1.Infrastructure\MVCPrueba1.Infrastructure.csproj" --startup-project "MVCPrueba1.csproj" --context ApplicationDbContext --output-dir "Data\Migrations"
+dotnet ef migrations add NombreDeLaMigracion --project "src\Infrastructure\Infrastructure.csproj" --startup-project "csproj" --context ApplicationDbContext --output-dir "Data\Migrations"
 ```
 
 Ejemplo:
 
 ```powershell
-dotnet ef migrations add AddPersonBirthDate --project "src\MVCPrueba1.Infrastructure\MVCPrueba1.Infrastructure.csproj" --startup-project "MVCPrueba1.csproj" --context ApplicationDbContext --output-dir "Data\Migrations"
+dotnet ef migrations add AddPersonBirthDate --project "src\Infrastructure\Infrastructure.csproj" --startup-project "csproj" --context ApplicationDbContext --output-dir "Data\Migrations"
 ```
 
 ## Eliminar la ultima migracion
@@ -149,7 +149,7 @@ dotnet ef migrations add AddPersonBirthDate --project "src\MVCPrueba1.Infrastruc
 Desde la raiz de la solucion:
 
 ```powershell
-dotnet ef migrations remove --project "src\MVCPrueba1.Infrastructure\MVCPrueba1.Infrastructure.csproj" --startup-project "MVCPrueba1.csproj" --context ApplicationDbContext
+dotnet ef migrations remove --project "src\Infrastructure\Infrastructure.csproj" --startup-project "csproj" --context ApplicationDbContext
 ```
 
 Este comando elimina la ultima migracion no aplicada o revierte los archivos de migracion generados.
@@ -159,13 +159,13 @@ Este comando elimina la ultima migracion no aplicada o revierte los archivos de 
 Desde la raiz de la solucion:
 
 ```powershell
-dotnet ef database update --project "src\MVCPrueba1.Infrastructure\MVCPrueba1.Infrastructure.csproj" --startup-project "MVCPrueba1.csproj" --context ApplicationDbContext
+dotnet ef database update --project "src\Infrastructure\Infrastructure.csproj" --startup-project "csproj" --context ApplicationDbContext
 ```
 
 ## Comprobar si hay cambios pendientes en el modelo
 
 ```powershell
-dotnet ef migrations has-pending-model-changes --project "src\MVCPrueba1.Infrastructure\MVCPrueba1.Infrastructure.csproj" --startup-project "MVCPrueba1.csproj" --context ApplicationDbContext
+dotnet ef migrations has-pending-model-changes --project "src\Infrastructure\Infrastructure.csproj" --startup-project "csproj" --context ApplicationDbContext
 ```
 
 Si todo esta sincronizado, EF mostrara:
@@ -185,16 +185,16 @@ dotnet ef migrations remove
 puede aparecer este error:
 
 ```text
-Your target project 'MVCPrueba1' doesn't match your migrations assembly 'MVCPrueba1.Infrastructure'.
+Your target project 'MVCPrueba1' doesn't match your migrations assembly 'Infrastructure'.
 ```
 
 Esto ocurre porque EF intenta usar el proyecto Web como proyecto de migraciones, pero las migraciones estan en
-`MVCPrueba1.Infrastructure`.
+`Infrastructure`.
 
 Solucion:
 
 ```powershell
-dotnet ef migrations remove --project "src\MVCPrueba1.Infrastructure\MVCPrueba1.Infrastructure.csproj" --startup-project "MVCPrueba1.csproj" --context ApplicationDbContext
+dotnet ef migrations remove --project "src\Infrastructure\Infrastructure.csproj" --startup-project "csproj" --context ApplicationDbContext
 ```
 
 ## Package Manager Console de Visual Studio
@@ -204,7 +204,7 @@ En Visual Studio, si usas la Package Manager Console:
 1. Selecciona como **Default project**:
 
 ```text
-MVCPrueba1.Infrastructure
+Infrastructure
 ```
 
 2. Para crear una migracion:
