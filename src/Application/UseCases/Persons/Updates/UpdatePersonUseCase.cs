@@ -91,6 +91,11 @@ namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Updates
                 return Result.Failure<bool>("Person name can't have more than 100 characters");
             }
 
+            if (!sourceClass.HasValidPhone())
+            {
+                return Result.Failure<bool>("Person phone must contain exactly 9 numbers");
+            }
+
             return Result.Success(true);
         }
     }

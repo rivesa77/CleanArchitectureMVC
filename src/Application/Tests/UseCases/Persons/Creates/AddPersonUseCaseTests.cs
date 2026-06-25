@@ -21,6 +21,7 @@ namespace Ricardo.MVCPrueba1.Application.Tests.UseCases.Persons.Creates
     {
         private const string DniRequiredMessage = "Person DNI is required";
         private const string DniAlreadyExistMessage = "Person DNI Already Exist";
+        private const string PhoneInvalidMessage = "Person phone must contain exactly 9 numbers";
         private const string ConverterErrorMessage = "Conversion from PersonViewModel to PersonEntity failed, PersonEntity is null";
 
         private static readonly PersonViewModel PersonViewModel = new PersonViewModel()
@@ -91,6 +92,47 @@ namespace Ricardo.MVCPrueba1.Application.Tests.UseCases.Persons.Creates
 
             // Assert.
             ValidateExpectResutl(result, DniAlreadyExistMessage);
+        }
+
+        [TestMethod]
+        [DataRow("12345678")]
+        [DataRow("1234567890")]
+        [DataRow("12345678A")]
+        public async Task Execute_WhenPhoneIsInvalid_ReturnsMessageErrorAndDoesNotCallRepository(string phone)
+        {
+            // Arrange.
+            this.mockPersonRepository
+                .Setup(m => m.ExistsByDniAsync(It.IsAny<string>()))
+                .ReturnsAsync(false)
+                .Verifiable(Times.Never());
+
+            this.mockPersonRepository
+                .Setup(m => m.AddAsync(It.IsAny<PersonEntity>()))
+                .Verifiable(Times.Never);
+
+            this.mockConverter
+                .Setup(m => m.Convert(It.IsAny<PersonViewModel>()))
+                .Verifiable(Times.Never);
+
+            PersonViewModel personViewModel = new PersonViewModel()
+            {
+                DNI = PersonViewModelConstants.Dni,
+                Email = PersonViewModelConstants.Email,
+                Name = PersonViewModelConstants.Name,
+                Phone = phone,
+            };
+
+            AddPersonUseCase addPersonUseCase = new AddPersonUseCase(
+                personRepository: this.mockPersonRepository.Object,
+                converter: this.mockConverter.Object);
+
+            // Act.
+            Result<bool> result = await addPersonUseCase
+                .Execute(personViewModel)
+                .ConfigureAwait(false);
+
+            // Assert.
+            ValidateExpectResutl(result, PhoneInvalidMessage);
         }
 
         [TestMethod]

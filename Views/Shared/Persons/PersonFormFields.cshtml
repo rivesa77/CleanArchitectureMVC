@@ -18,7 +18,7 @@
 	<label class="form-label" asp-for="Phone">
 		Person Phone
 	</label>
-	<input type="text" asp-for="Phone" class="form-control" placeholder="600 000 000" required maxlength="9">
+	<input type="tel" asp-for="Phone" class="form-control" placeholder="600000000" required inputmode="numeric" pattern="[0-9]{9}" minlength="9" maxlength="9" data-digits-only="true">
 </div>
 
 <div class="form-field">

@@ -44,5 +44,17 @@
 				input?.addEventListener('input', hideMessages);
 			});
 		});
+
+		document.querySelectorAll('[data-digits-only="true"]').forEach((input) => {
+			input.addEventListener('beforeinput', (event) => {
+				if (event.data && /\D/.test(event.data)) {
+					event.preventDefault();
+				}
+			});
+
+			input.addEventListener('input', () => {
+				input.value = input.value.replace(/\D/g, '').slice(0, input.maxLength);
+			});
+		});
 	})();
 </script>

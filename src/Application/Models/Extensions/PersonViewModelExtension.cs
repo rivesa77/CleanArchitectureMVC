@@ -5,6 +5,7 @@
 namespace Ricardo.MVCPrueba1.Application.Models.Extensions
 {
     using System;
+    using System.Linq;
     using Ricardo.MVCPrueba1.Application.Models;
     using Ricardo.MVCPrueba1.Domain.Entities;
 
@@ -16,6 +17,17 @@ namespace Ricardo.MVCPrueba1.Application.Models.Extensions
                 || !string.Equals(sourceClass.Name, currentPerson.Name, StringComparison.Ordinal)
                 || !string.Equals(sourceClass.Phone, currentPerson.Phone, StringComparison.Ordinal)
                 || !string.Equals(sourceClass.Email, currentPerson.Email, StringComparison.Ordinal);
+        }
+
+        public static bool HasValidPhone(this PersonViewModel sourceClass)
+        {
+            return sourceClass?.Phone?.Length == 9
+                && sourceClass.Phone.All(char.IsDigit);
+        }
+
+        public static bool HasValidDni(this PersonViewModel sourceClass)
+        {
+            return sourceClass?.DNI?.Length == 9;
         }
     }
 }

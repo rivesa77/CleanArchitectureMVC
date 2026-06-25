@@ -6,6 +6,7 @@ namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Creates
 {
     using Ricardo.MVCPrueba1.Application.Converter.PersonsViewModel.ToPersonEntity;
     using Ricardo.MVCPrueba1.Application.Models;
+    using Ricardo.MVCPrueba1.Application.Models.Extensions;
     using Ricardo.MVCPrueba1.Application.Repositories;
     using Ricardo.MVCPrueba1.Domain.Entities;
     using ROP;
@@ -14,6 +15,8 @@ namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Creates
     {
         private const string DniRequiredMessage = "Person DNI is required";
         private const string DniAlreadyExistMessage = "Person DNI Already Exist";
+        private const string DniInvalidMessage = "Person dni must contain exactly 9 characters";
+        private const string PhoneInvalidMessage = "Person phone must contain exactly 9 numbers";
         private const string ConverterErrorMessage = "Conversion from PersonViewModel to PersonEntity failed, PersonEntity is null";
 
         private readonly IPersonRepository personRepository;
@@ -32,6 +35,16 @@ namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Creates
             if (string.IsNullOrWhiteSpace(personViewModel?.DNI))
             {
                 return Result.Failure<bool>(DniRequiredMessage);
+            }
+
+            if (!personViewModel.HasValidDni())
+            {
+                return Result.Failure<bool>(DniInvalidMessage);
+            }
+
+            if (!personViewModel.HasValidPhone())
+            {
+                return Result.Failure<bool>(PhoneInvalidMessage);
             }
 
             return await this.ValidatePerson(personViewModel)
