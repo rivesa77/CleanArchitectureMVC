@@ -4,6 +4,7 @@
 
 namespace Ricardo.MVCPrueba1.Infrastructure.Extensions
 {
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,26 @@ namespace Ricardo.MVCPrueba1.Infrastructure.Extensions
             services
                 .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Strict;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                options.SlidingExpiration = true;
+                options.Events.OnSigningIn = context =>
+                {
+                    context.Properties.IsPersistent = false;
+
+                    return Task.CompletedTask;
+                };
+            });
+
+            services.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                options.ValidationInterval = TimeSpan.FromMinutes(5);
+            });
 
             services
                 .AddScoped<IPersonRepository, PersonRepository>()
