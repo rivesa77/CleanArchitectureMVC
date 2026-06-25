@@ -6,6 +6,8 @@ namespace Ricardo.MVCPrueba1.E2E.Tests.Persons
 {
     using System.Net;
     using System.Text.RegularExpressions;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc.Testing;
     using Microsoft.EntityFrameworkCore;
     using Ricardo.MVCPrueba1.Infrastructure.Data;
 
@@ -13,28 +15,30 @@ namespace Ricardo.MVCPrueba1.E2E.Tests.Persons
     [TestCategory("E2E.Persons")]
     public class PersonsE2ETests
     {
-        private static readonly Uri BaseUri = new Uri(
-            Environment.GetEnvironmentVariable("E2E_BASE_URL") ?? "https://localhost:7097");
-
         [TestMethod]
         public async Task Persons_WhenCreated_CanBeSearchedAndSortedByNameDescending()
         {
-            using HttpClient client = CreateHttpClient();
             string uniqueId = Guid.NewGuid().ToString("N")[..8];
+            string connectionString = CreateConnectionString(uniqueId);
             string searchTerm = $"E2E {uniqueId}";
             string aliceName = $"{searchTerm} Alice";
             string zedName = $"{searchTerm} Zed";
-            bool cleanupRequired = false;
+
+            await using WebApplicationFactory<Program> factory = CreateFactory(connectionString);
+            HttpClient client = factory.CreateClient(new WebApplicationFactoryClientOptions()
+            {
+                AllowAutoRedirect = false,
+                BaseAddress = new Uri("https://localhost"),
+                HandleCookies = true,
+            });
 
             try
             {
                 await RegisterUser(client, uniqueId).ConfigureAwait(false);
-                cleanupRequired = true;
-
                 await CreatePerson(client, "80000001A", aliceName, $"alice.{uniqueId}@example.com", "600300001").ConfigureAwait(false);
                 await CreatePerson(client, "80000002B", zedName, $"zed.{uniqueId}@example.com", "600300002").ConfigureAwait(false);
 
-                string personsPage = await GetStringOrInconclusive(
+                string personsPage = await GetString(
                     client,
                     $"/Persons?searchField=Name&searchTerm={Uri.EscapeDataString(searchTerm)}&pageSize=5&sortField=Name&sortDirection=Descending")
                     .ConfigureAwait(false);
@@ -48,32 +52,23 @@ namespace Ricardo.MVCPrueba1.E2E.Tests.Persons
             }
             finally
             {
-                if (cleanupRequired)
-                {
-                    await CleanupTestData(uniqueId).ConfigureAwait(false);
-                }
+                await DeleteDatabase(connectionString).ConfigureAwait(false);
             }
         }
 
-        private static HttpClient CreateHttpClient()
+        private static WebApplicationFactory<Program> CreateFactory(string connectionString)
         {
-            HttpClientHandler handler = new HttpClientHandler()
-            {
-                AllowAutoRedirect = false,
-                CookieContainer = new CookieContainer(),
-                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
-            };
-
-            return new HttpClient(handler)
-            {
-                BaseAddress = BaseUri,
-                Timeout = TimeSpan.FromSeconds(20),
-            };
+            return new WebApplicationFactory<Program>()
+                .WithWebHostBuilder(builder =>
+                {
+                    builder.UseSetting("ConnectionStrings:DefaultConnection", connectionString);
+                    builder.UseEnvironment("Development");
+                });
         }
 
         private static async Task RegisterUser(HttpClient client, string uniqueId)
         {
-            string registerPage = await GetStringOrInconclusive(client, "/Identity/Account/Register").ConfigureAwait(false);
+            string registerPage = await GetString(client, "/Identity/Account/Register").ConfigureAwait(false);
             string token = GetAntiForgeryToken(registerPage);
 
             using HttpResponseMessage response = await client.PostAsync(
@@ -110,30 +105,15 @@ namespace Ricardo.MVCPrueba1.E2E.Tests.Persons
                 $"Expected person create to redirect after success, but received {(int)response.StatusCode}.");
         }
 
-        private static async Task<string> GetStringOrInconclusive(HttpClient client, string path)
+        private static async Task<string> GetString(HttpClient client, string path)
         {
-            try
-            {
-                using HttpResponseMessage response = await client.GetAsync(path).ConfigureAwait(false);
+            using HttpResponseMessage response = await client.GetAsync(path).ConfigureAwait(false);
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    Assert.Inconclusive(
-                        $"E2E app is not ready at {BaseUri}. GET {path} returned {(int)response.StatusCode}.");
-                }
+            Assert.IsTrue(
+                response.IsSuccessStatusCode,
+                $"Expected GET {path} to succeed, but received {(int)response.StatusCode}.");
 
-                return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            }
-            catch (HttpRequestException exception)
-            {
-                Assert.Inconclusive($"E2E app is not available at {BaseUri}: {exception.Message}");
-                throw;
-            }
-            catch (TaskCanceledException exception)
-            {
-                Assert.Inconclusive($"E2E app did not respond at {BaseUri}: {exception.Message}");
-                throw;
-            }
+            return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
 
         private static string GetAntiForgeryToken(string html)
@@ -148,42 +128,19 @@ namespace Ricardo.MVCPrueba1.E2E.Tests.Persons
             return WebUtility.HtmlDecode(match.Groups["token"].Value);
         }
 
-        private static async Task CleanupTestData(string uniqueId)
+        private static async Task DeleteDatabase(string connectionString)
         {
             DbContextOptions<ApplicationDbContext> options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseSqlServer(GetConnectionString())
+                .UseSqlServer(connectionString)
                 .Options;
 
             await using ApplicationDbContext context = new ApplicationDbContext(options);
-            string userEmail = $"e2e.{uniqueId}@example.com";
-
-            string[] personEmails =
-            [
-                $"alice.{uniqueId}@example.com",
-                $"zed.{uniqueId}@example.com",
-            ];
-
-            context.Persons.RemoveRange(
-                context.Persons.Where(person =>
-                    person.Name.Contains(uniqueId)
-                    || personEmails.Contains(person.Email)));
-
-            Microsoft.AspNetCore.Identity.IdentityUser user = await context.Users
-                .SingleOrDefaultAsync(identityUser => identityUser.Email == userEmail)
-                .ConfigureAwait(false);
-
-            if (user is not null)
-            {
-                context.Users.Remove(user);
-            }
-
-            await context.SaveChangesAsync().ConfigureAwait(false);
+            await context.Database.EnsureDeletedAsync().ConfigureAwait(false);
         }
 
-        private static string GetConnectionString()
+        private static string CreateConnectionString(string uniqueId)
         {
-            return Environment.GetEnvironmentVariable("E2E_CONNECTION_STRING")
-                ?? "Server=(localdb)\\mssqllocaldb;Database=MVCPrueba1;Trusted_Connection=True;MultipleActiveResultSets=true";
+            return $"Server=(localdb)\\mssqllocaldb;Database=MVCPrueba1_E2E_{uniqueId};Trusted_Connection=True;MultipleActiveResultSets=true";
         }
     }
 }
