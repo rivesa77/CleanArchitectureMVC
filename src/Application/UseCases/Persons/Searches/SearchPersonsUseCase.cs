@@ -4,6 +4,7 @@
 
 namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Searches
 {
+    using Ricardo.Application.Converter.PersonsSearchCriteria.ToPersonSearchQuery;
     using Ricardo.MVCPrueba1.Application.Converter.PersonEntities.ToPersonViewModel;
     using Ricardo.MVCPrueba1.Application.Models;
     using Ricardo.MVCPrueba1.Application.Repositories;
@@ -14,15 +15,18 @@ namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Searches
     internal class SearchPersonsUseCase : PersonUseCaseBase, ISearchPersonsUseCase
     {
         private static readonly int[] AllowedPageSizes = [5, 10, 15];
-        private readonly IPersonEntitiesToPersonViewModelConverter converter;
+        private readonly IPersonEntitiesToPersonViewModelConverter pesonViewModelConverter;
+        private readonly IPersonsSearchCriteriaToPersonSearchQueryConverter personSearchQueryConverter;
 
         public SearchPersonsUseCase(
             IPersonRepository personRepository,
             IPersonUserDetails personUserDetails,
-            IPersonEntitiesToPersonViewModelConverter converter)
+            IPersonEntitiesToPersonViewModelConverter converter,
+            IPersonsSearchCriteriaToPersonSearchQueryConverter personSearchQueryConverter)
                 : base(personRepository, personUserDetails)
         {
-            this.converter = converter;
+            this.pesonViewModelConverter = converter;
+            this.personSearchQueryConverter = personSearchQueryConverter;
         }
 
         public async Task<Result<PersonSearchViewModel>> Execute(PersonSearchCriteria criteria)
@@ -54,18 +58,6 @@ namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Searches
             return normalizedCriteria;
         }
 
-        private static PersonSearchQuery CreatePersonSearchQuery(string userId, PersonSearchCriteria criteria)
-        {
-            return new PersonSearchQuery()
-            {
-                UserId = userId,
-                SearchField = criteria.SearchField,
-                SearchTerm = criteria.SearchTerm,
-                PageNumber = criteria.PageNumber,
-                PageSize = criteria.PageSize,
-            };
-        }
-
         private static int GetTotalPages(int totalItems, int pageSize)
         {
             if (totalItems <= 0)
@@ -80,7 +72,7 @@ namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Searches
         {
             string userId = this.PersonUserDetails.UserId;
 
-            PersonSearchQuery personSearchQuery = CreatePersonSearchQuery(userId, criteria);
+            PersonSearchQuery personSearchQuery = this.personSearchQueryConverter.Convert(criteria);
 
             (IEnumerable<PersonEntity> personEntities, int totalItems) = await this.PersonRepository
                 .SearchByUserIdAsync(personSearchQuery)
@@ -99,7 +91,7 @@ namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Searches
                 totalPages = GetTotalPages(totalItems, criteria.PageSize);
             }
 
-            IEnumerable<PersonViewModel> personViewModels = personEntities.Select(p => this.converter.Convert(p));
+            IEnumerable<PersonViewModel> personViewModels = personEntities.Select(p => this.pesonViewModelConverter.Convert(p));
 
             return new PersonSearchViewModel()
             {
