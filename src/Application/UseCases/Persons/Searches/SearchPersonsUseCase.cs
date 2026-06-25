@@ -79,6 +79,7 @@ namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Searches
         private async Task<PersonSearchViewModel> SearchPersons(PersonSearchCriteria criteria)
         {
             string userId = this.PersonUserDetails.UserId;
+
             PersonSearchQuery personSearchQuery = CreatePersonSearchQuery(userId, criteria);
 
             (IEnumerable<PersonEntity> personEntities, int totalItems) = await this.PersonRepository
@@ -89,8 +90,7 @@ namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Searches
 
             if (totalPages > 0 && criteria.PageNumber > totalPages)
             {
-                criteria.PageNumber = totalPages;
-                personSearchQuery = CreatePersonSearchQuery(userId, criteria);
+                personSearchQuery.PageNumber = totalPages;
 
                 (personEntities, totalItems) = await this.PersonRepository
                     .SearchByUserIdAsync(personSearchQuery)

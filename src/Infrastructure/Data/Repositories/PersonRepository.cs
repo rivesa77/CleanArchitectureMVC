@@ -83,13 +83,17 @@ namespace Ricardo.MVCPrueba1.Infrastructure.Data.Repositories
             }
 
             int pageNumber = personSearchQuery.PageNumber < 1 ? 1 : personSearchQuery.PageNumber;
+
             int pageSize = personSearchQuery.PageSize < 1 ? 5 : personSearchQuery.PageSize;
 
             IQueryable<PersonEntity> query = this.applicationDbContext.Persons
                 .AsNoTracking()
                 .Where(p => p.UserId == personSearchQuery.UserId);
 
-            query = ApplySearch(query, personSearchQuery.SearchField, personSearchQuery.SearchTerm);
+            query = ApplySearch(
+                query,
+                personSearchQuery.SearchField,
+                personSearchQuery.SearchTerm);
 
             int totalItems = await query.CountAsync().ConfigureAwait(false);
 
