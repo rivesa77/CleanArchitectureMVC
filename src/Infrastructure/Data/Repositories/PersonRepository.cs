@@ -5,6 +5,7 @@
 namespace Ricardo.MVCPrueba1.Infrastructure.Data.Repositories
 {
     using Microsoft.EntityFrameworkCore;
+    using Ricardo.MVCPrueba1.Application.Models;
     using Ricardo.MVCPrueba1.Application.Repositories;
     using Ricardo.MVCPrueba1.Domain.Entities;
 
@@ -19,7 +20,7 @@ namespace Ricardo.MVCPrueba1.Infrastructure.Data.Repositories
 
         public async Task<bool> ExistsByDniAsync(string dni)
         {
-            bool isNormalizedDni = this.NormalizeDni(ref dni);
+            bool isNormalizedDni = NormalizeDni(ref dni);
 
             if (!isNormalizedDni)
             {
@@ -34,7 +35,7 @@ namespace Ricardo.MVCPrueba1.Infrastructure.Data.Repositories
 
         public async Task<bool> ExistsByDniAndIdAsync(string dni, Guid id)
         {
-            bool isNormalizedDni = this.NormalizeDni(ref dni);
+            bool isNormalizedDni = NormalizeDni(ref dni);
 
             if (!isNormalizedDni)
             {
@@ -72,6 +73,35 @@ namespace Ricardo.MVCPrueba1.Infrastructure.Data.Repositories
                 .Where(p => p.UserId == userId)
                 .ToListAsync()
                 .ConfigureAwait(false);
+        }
+
+        public async Task<(IEnumerable<PersonEntity> Persons, int TotalItems)> SearchByUserIdAsync(PersonSearchQuery personSearchQuery)
+        {
+            if (personSearchQuery is null || string.IsNullOrWhiteSpace(personSearchQuery.UserId))
+            {
+                return ([], 0);
+            }
+
+            int pageNumber = personSearchQuery.PageNumber < 1 ? 1 : personSearchQuery.PageNumber;
+            int pageSize = personSearchQuery.PageSize < 1 ? 5 : personSearchQuery.PageSize;
+
+            IQueryable<PersonEntity> query = this.applicationDbContext.Persons
+                .AsNoTracking()
+                .Where(p => p.UserId == personSearchQuery.UserId);
+
+            query = ApplySearch(query, personSearchQuery.SearchField, personSearchQuery.SearchTerm);
+
+            int totalItems = await query.CountAsync().ConfigureAwait(false);
+
+            IEnumerable<PersonEntity> persons = await query
+                .OrderBy(p => p.Name)
+                .ThenBy(p => p.DNI)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync()
+                .ConfigureAwait(false);
+
+            return (persons, totalItems);
         }
 
         public async Task<PersonEntity> GetByIdAndUserIdAsync(Guid id, string userId)
@@ -115,7 +145,33 @@ namespace Ricardo.MVCPrueba1.Infrastructure.Data.Repositories
             return true;
         }
 
-        private bool NormalizeDni(ref string dni)
+        private static IQueryable<PersonEntity> ApplySearch(
+            IQueryable<PersonEntity> query,
+            PersonSearchField searchField,
+            string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return query;
+            }
+
+            string normalizedSearchTerm = searchTerm.Trim().ToUpper();
+
+            return searchField switch
+            {
+                PersonSearchField.Dni => query.Where(p => p.DNI.ToUpper().Contains(normalizedSearchTerm)),
+                PersonSearchField.Name => query.Where(p => p.Name != null && p.Name.ToUpper().Contains(normalizedSearchTerm)),
+                PersonSearchField.Email => query.Where(p => p.Email != null && p.Email.ToUpper().Contains(normalizedSearchTerm)),
+                PersonSearchField.Phone => query.Where(p => p.Phone != null && p.Phone.ToUpper().Contains(normalizedSearchTerm)),
+                _ => query.Where(p =>
+                    p.DNI.ToUpper().Contains(normalizedSearchTerm)
+                    || (p.Name != null && p.Name.ToUpper().Contains(normalizedSearchTerm))
+                    || (p.Email != null && p.Email.ToUpper().Contains(normalizedSearchTerm))
+                    || (p.Phone != null && p.Phone.ToUpper().Contains(normalizedSearchTerm))),
+            };
+        }
+
+        private static bool NormalizeDni(ref string dni)
         {
             string normalizedDni = dni?.Trim().ToUpperInvariant() ?? default;
 

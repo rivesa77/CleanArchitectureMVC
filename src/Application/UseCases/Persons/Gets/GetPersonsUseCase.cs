@@ -19,7 +19,7 @@ namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Gets
             IPersonRepository personRepository,
             IPersonUserDetails personUserDetails,
             IPersonEntitiesToPersonViewModelConverter converter)
-            : base(personRepository, personUserDetails)
+                : base(personRepository, personUserDetails)
         {
             this.converter = converter;
         }

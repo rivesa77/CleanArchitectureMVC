@@ -21,6 +21,8 @@ namespace Ricardo.MVCPrueba1.Application.Repositories
 
         Task<IEnumerable<PersonEntity>> GetByUserIdAsync(string userId);
 
+        Task<(IEnumerable<PersonEntity> Persons, int TotalItems)> SearchByUserIdAsync(PersonSearchQuery personSearchQuery);
+
         Task<PersonEntity> GetByIdAndUserIdAsync(Guid id, string userId);
 
         Task<bool> ExistsByDniAndIdAsync(string dni, Guid id);

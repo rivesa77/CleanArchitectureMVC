@@ -7,34 +7,46 @@ namespace Ricardo.MVCPrueba1.Controllers.Persons
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Ricardo.MVCPrueba1.Application.Models;
-    using Ricardo.MVCPrueba1.Application.UseCases.Persons.Gets;
+    using Ricardo.MVCPrueba1.Application.UseCases.Persons.Searches;
     using ROP;
 
     [Authorize]
     [Route("Persons")]
     public class GetPersonsController : Controller
     {
-        private readonly IGetPersonsUseCase getPersonsUseCase;
+        private readonly ISearchPersonsUseCase searchPersonsUseCase;
 
-        public GetPersonsController(IGetPersonsUseCase getPersonsUseCase)
+        public GetPersonsController(ISearchPersonsUseCase searchPersonsUseCase)
         {
-            this.getPersonsUseCase = getPersonsUseCase;
+            this.searchPersonsUseCase = searchPersonsUseCase;
         }
 
         [HttpGet("")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            PersonSearchField searchField = PersonSearchField.All,
+            string searchTerm = default,
+            int pageNumber = 1,
+            int pageSize = 5)
         {
-            Result<IEnumerable<PersonViewModel>> result = await this.getPersonsUseCase.Execute()
+            PersonSearchCriteria criteria = new PersonSearchCriteria()
+            {
+                SearchField = searchField,
+                SearchTerm = searchTerm,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+            };
+
+            Result<PersonSearchViewModel> result = await this.searchPersonsUseCase.Execute(criteria)
                 .ConfigureAwait(false);
 
-            PersonCollectionViewModel personCollectionViewModel = new PersonCollectionViewModel();
+            PersonSearchViewModel personSearchViewModel = new PersonSearchViewModel();
 
             if (!result.Errors.Any())
             {
-                personCollectionViewModel.Persons = result.Value;
+                personSearchViewModel = result.Value;
             }
 
-            return this.View("~/Views/Persons/Index.cshtml", personCollectionViewModel);
+            return this.View("~/Views/Persons/Index.cshtml", personSearchViewModel);
         }
     }
 }

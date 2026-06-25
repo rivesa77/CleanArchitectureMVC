@@ -8,6 +8,7 @@ namespace Ricardo.MVCPrueba1.Application.UseCases.Extensions
     using Ricardo.MVCPrueba1.Application.UseCases.Persons.Creates;
     using Ricardo.MVCPrueba1.Application.UseCases.Persons.Deletes;
     using Ricardo.MVCPrueba1.Application.UseCases.Persons.Gets;
+    using Ricardo.MVCPrueba1.Application.UseCases.Persons.Searches;
     using Ricardo.MVCPrueba1.Application.UseCases.Persons.Updates;
 
     public static class AddUseCaseServiceCollection
@@ -19,6 +20,7 @@ namespace Ricardo.MVCPrueba1.Application.UseCases.Extensions
                 .AddScoped<IDeletePersonUseCase, DeletePersonUseCase>()
                 .AddScoped<IGetPersonUseCase, GetPersonUseCase>()
                 .AddScoped<IGetPersonsUseCase, GetPersonsUseCase>()
+                .AddScoped<ISearchPersonsUseCase, SearchPersonsUseCase>()
                 .AddScoped<IUpdatePersonUseCase, UpdatePersonUseCase>();
 
             return services;

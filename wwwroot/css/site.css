@@ -159,6 +159,12 @@ a {
   min-height: 42px;
 }
 
+.form-select {
+  border-color: var(--app-border);
+  border-radius: 6px;
+  min-height: 42px;
+}
+
 .form-actions {
   align-items: center;
   border-top: 1px solid var(--app-border);
@@ -194,6 +200,46 @@ a {
 
 .person-table {
   margin-bottom: 0;
+}
+
+.person-search-surface {
+  margin-bottom: 16px;
+  padding: 18px;
+}
+
+.person-search-form {
+  align-items: end;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(140px, 0.8fr) minmax(220px, 2fr) minmax(120px, 0.6fr) auto;
+}
+
+.person-search-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.empty-table-message {
+  color: var(--app-muted);
+  font-weight: 600;
+  padding: 22px 18px;
+  text-align: center;
+}
+
+.person-pagination {
+  align-items: center;
+  border-top: 1px solid var(--app-border);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 14px 18px;
+}
+
+.person-pagination p {
+  color: var(--app-muted);
+  font-weight: 600;
+  margin: 0;
 }
 
 .person-table thead th {
@@ -276,6 +322,16 @@ a {
   .form-actions {
     align-items: stretch;
     flex-direction: column-reverse;
+  }
+
+  .person-search-form {
+    grid-template-columns: 1fr;
+  }
+
+  .person-search-actions,
+  .person-pagination {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .table-actions {

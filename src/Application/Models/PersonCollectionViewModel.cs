@@ -6,6 +6,6 @@ namespace Ricardo.MVCPrueba1.Application.Models
 {
     public class PersonCollectionViewModel
     {
-        public IEnumerable<PersonViewModel> Persons { get; set; }
+        public IEnumerable<PersonViewModel> Persons { get; set; } = [];
     }
 }
