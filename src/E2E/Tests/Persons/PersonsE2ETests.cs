@@ -6,6 +6,7 @@ namespace Ricardo.MVCPrueba1.E2E.Tests.Persons
 {
     using System.Net;
     using System.Text.RegularExpressions;
+    using FluentAssertions;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc.Testing;
     using Microsoft.EntityFrameworkCore;
@@ -66,12 +67,19 @@ namespace Ricardo.MVCPrueba1.E2E.Tests.Persons
                     $"/Persons?searchField=Name&searchTerm={escapeDataString}&pageSize=5&sortField=Name&sortDirection=Descending")
                     .ConfigureAwait(false);
 
-                StringAssert.Contains(personsPage, AnotherPerson.Name);
-                StringAssert.Contains(personsPage, Person.Name);
+                personsPage
+                    .Should()
+                    .Contain(AnotherPerson.Name);
 
-                Assert.IsTrue(
-                    personsPage.IndexOf(Person.Name, StringComparison.Ordinal) < personsPage.IndexOf(AnotherPerson.Name, StringComparison.Ordinal),
-                    "Expected the Pepe person to appear before the Antonio person when sorting by name descending.");
+                personsPage
+                    .Should()
+                    .Contain(Person.Name);
+
+                personsPage.IndexOf(Person.Name, StringComparison.Ordinal)
+                    .Should()
+                    .BeLessThan(
+                        personsPage.IndexOf(AnotherPerson.Name, StringComparison.Ordinal),
+                        "the Pepe person should appear before the Antonio person when sorting by name descending");
             }
             finally
             {
@@ -108,9 +116,9 @@ namespace Ricardo.MVCPrueba1.E2E.Tests.Persons
                 }))
                 .ConfigureAwait(false);
 
-            Assert.IsTrue(
-                response.StatusCode is HttpStatusCode.Redirect or HttpStatusCode.SeeOther,
-                $"Expected register to redirect after success, but received {(int)response.StatusCode}.");
+            (response.StatusCode is HttpStatusCode.Redirect or HttpStatusCode.SeeOther)
+                .Should()
+                .BeTrue($"register should redirect after success, but received {(int)response.StatusCode}");
         }
 
         private static async Task CreatePerson(HttpClient client, PersonEntity personEntity)
@@ -126,18 +134,18 @@ namespace Ricardo.MVCPrueba1.E2E.Tests.Persons
                 }))
                 .ConfigureAwait(false);
 
-            Assert.IsTrue(
-                response.StatusCode is HttpStatusCode.Redirect or HttpStatusCode.SeeOther,
-                $"Expected person create to redirect after success, but received {(int)response.StatusCode}.");
+            (response.StatusCode is HttpStatusCode.Redirect or HttpStatusCode.SeeOther)
+                .Should()
+                .BeTrue($"person create should redirect after success, but received {(int)response.StatusCode}");
         }
 
         private static async Task<string> GetString(HttpClient client, string path)
         {
             using HttpResponseMessage response = await client.GetAsync(path).ConfigureAwait(false);
 
-            Assert.IsTrue(
-                response.IsSuccessStatusCode,
-                $"Expected GET {path} to succeed, but received {(int)response.StatusCode}.");
+            response.IsSuccessStatusCode
+                .Should()
+                .BeTrue($"GET {path} should succeed, but received {(int)response.StatusCode}");
 
             return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
@@ -149,7 +157,9 @@ namespace Ricardo.MVCPrueba1.E2E.Tests.Persons
                 "name=\"__RequestVerificationToken\"[^>]*value=\"(?<token>[^\"]+)\"|value=\"(?<token>[^\"]+)\"[^>]*name=\"__RequestVerificationToken\"",
                 RegexOptions.IgnoreCase);
 
-            Assert.IsTrue(match.Success, "The antiforgery token was not found in the register page.");
+            match.Success
+                .Should()
+                .BeTrue("the antiforgery token should be present in the register page");
 
             return WebUtility.HtmlDecode(match.Groups["token"].Value);
         }
