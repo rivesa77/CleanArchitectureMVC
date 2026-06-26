@@ -4,8 +4,8 @@
 
 namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Searches
 {
-    using Ricardo.Application.Converter.PersonsSearchCriteria.ToPersonSearchQuery;
     using Ricardo.MVCPrueba1.Application.Converter.PersonEntities.ToPersonViewModel;
+    using Ricardo.MVCPrueba1.Application.Converter.PersonsSearchCriteria.ToPersonSearchQuery;
     using Ricardo.MVCPrueba1.Application.Models;
     using Ricardo.MVCPrueba1.Application.Repositories;
     using Ricardo.MVCPrueba1.Application.UserInfo;

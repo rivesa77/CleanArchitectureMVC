@@ -5,8 +5,8 @@
 namespace Ricardo.MVCPrueba1.Application.Converter.Extensions
 {
     using Microsoft.Extensions.DependencyInjection;
-    using Ricardo.Application.Converter.PersonsSearchCriteria.ToPersonSearchQuery.Extensions;
     using Ricardo.MVCPrueba1.Application.Converter.PersonEntities.ToPersonViewModel.Extensions;
+    using Ricardo.MVCPrueba1.Application.Converter.PersonsSearchCriteria.ToPersonSearchQuery.Extensions;
     using Ricardo.MVCPrueba1.Application.Converter.PersonsViewModel.ToPersonEntity.Extensions;
 
     internal static class AddConvertersServiceCollectionExtension

@@ -1,8 +1,8 @@
-﻿// <copyright file="IPersonsSearchCriteriaToPersonSearchQueryConverter.cs" company="Ricardo">
+// <copyright file="IPersonsSearchCriteriaToPersonSearchQueryConverter.cs" company="Ricardo">
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
-namespace Ricardo.Application.Converter.PersonsSearchCriteria.ToPersonSearchQuery
+namespace Ricardo.MVCPrueba1.Application.Converter.PersonsSearchCriteria.ToPersonSearchQuery
 {
     using Ricardo.CommonLibraries.Converters;
     using Ricardo.MVCPrueba1.Application.Repositories;

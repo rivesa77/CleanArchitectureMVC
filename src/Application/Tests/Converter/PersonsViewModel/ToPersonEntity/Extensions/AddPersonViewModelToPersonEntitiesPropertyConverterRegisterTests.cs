@@ -1,8 +1,8 @@
-﻿// <copyright file="AddPersonViewModelToPersonEntitiesPropertyConverterRegisterTests.cs" company="Ricardo">
+// <copyright file="AddPersonViewModelToPersonEntitiesPropertyConverterRegisterTests.cs" company="Ricardo">
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
-namespace Ricardo.Application.Tests.Converter.PersonsViewModel.ToPersonEntity.Extensions
+namespace Ricardo.MVCPrueba1.Application.Tests.Converter.PersonsViewModel.ToPersonEntity.Extensions
 {
     using Ricardo.MVCPrueba1.Application.Converter.PersonsViewModel.ToPersonEntity.Extensions;
     using Ricardo.MVCPrueba1.Application.Converter.PersonsViewModel.ToPersonEntity.Properties;

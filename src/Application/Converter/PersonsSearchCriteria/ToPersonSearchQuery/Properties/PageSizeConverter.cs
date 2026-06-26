@@ -1,8 +1,8 @@
-﻿// <copyright file="PageSizeConverter.cs" company="Ricardo">
+// <copyright file="PageSizeConverter.cs" company="Ricardo">
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
-namespace Ricardo.Application.Converter.PersonsSearchCriteria.ToPersonSearchQuery.Properties
+namespace Ricardo.MVCPrueba1.Application.Converter.PersonsSearchCriteria.ToPersonSearchQuery.Properties
 {
     using Ricardo.CommonLibraries.Converters;
     using Ricardo.MVCPrueba1.Application.Repositories;
