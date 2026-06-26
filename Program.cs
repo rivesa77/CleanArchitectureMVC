@@ -22,8 +22,8 @@ builder.Services
     .AddControllersWithViews();
 
 builder.Services
-    .AddApplication()
-    .AddInfrastructure(connectionString);
+    .AddApplicationServiceCollection()
+    .AddInfrastructureServiceCollection(connectionString);
 
 var app = builder.Build();
 

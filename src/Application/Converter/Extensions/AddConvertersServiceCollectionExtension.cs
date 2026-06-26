@@ -1,4 +1,4 @@
-// <copyright file="AddConvertersExtension.cs" company="Ricardo">
+// <copyright file="AddConvertersServiceCollectionExtension.cs" company="Ricardo">
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
@@ -9,9 +9,9 @@ namespace Ricardo.MVCPrueba1.Application.Converter.Extensions
     using Ricardo.MVCPrueba1.Application.Converter.PersonEntities.ToPersonViewModel.Extensions;
     using Ricardo.MVCPrueba1.Application.Converter.PersonsViewModel.ToPersonEntity.Extensions;
 
-    internal static class AddConvertersExtension
+    internal static class AddConvertersServiceCollectionExtension
     {
-        internal static IServiceCollection AddConverters(this IServiceCollection services)
+        internal static IServiceCollection AddConvertersServiceCollection(this IServiceCollection services)
         {
             services
                 .AddPersonEntitiesToPersonViewModelConverter()

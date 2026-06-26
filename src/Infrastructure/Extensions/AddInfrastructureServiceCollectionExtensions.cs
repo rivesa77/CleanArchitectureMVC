@@ -1,5 +1,5 @@
-// <copyright file="AddInfrastructureServiceCollection.cs" company="Ricardo">
-// Copyright (c) Ricardo. All rights reserved.
+// <copyright file="AddInfrastructureServiceCollectionExtensions.cs" company="Ricardo">
+//     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
 namespace Ricardo.MVCPrueba1.Infrastructure.Extensions
@@ -14,9 +14,9 @@ namespace Ricardo.MVCPrueba1.Infrastructure.Extensions
     using Ricardo.MVCPrueba1.Infrastructure.Data.Repositories;
     using Ricardo.MVCPrueba1.Infrastructure.UserInfo;
 
-    public static class AddInfrastructureServiceCollection
+    public static class AddInfrastructureServiceCollectionExtensions
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString)
+        public static IServiceCollection AddInfrastructureServiceCollection(this IServiceCollection services, string connectionString)
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
             services.AddDatabaseDeveloperPageExceptionFilter();

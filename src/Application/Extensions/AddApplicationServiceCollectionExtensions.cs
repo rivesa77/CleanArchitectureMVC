@@ -1,4 +1,4 @@
-// <copyright file="AddApplicationExtensions.cs" company="Ricardo">
+// <copyright file="AddApplicationServiceCollectionExtensions.cs" company="Ricardo">
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
@@ -8,13 +8,13 @@ namespace Ricardo.MVCPrueba1.Application.Extensions
     using Ricardo.MVCPrueba1.Application.Converter.Extensions;
     using Ricardo.MVCPrueba1.Application.UseCases.Extensions;
 
-    public static class AddApplicationExtensions
+    public static class AddApplicationServiceCollectionExtensions
     {
-        public static IServiceCollection AddApplication(this IServiceCollection services)
+        public static IServiceCollection AddApplicationServiceCollection(this IServiceCollection services)
         {
             services
-                .AddConverters()
-                .AddUseCases();
+                .AddConvertersServiceCollection()
+                .AddUseCaseServiceCollection();
 
             return services;
         }

@@ -1,4 +1,4 @@
-// <copyright file="AddUseCaseServiceCollection.cs" company="Ricardo">
+// <copyright file="AddUseCaseServiceCollectionExtensions.cs" company="Ricardo">
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
@@ -11,9 +11,9 @@ namespace Ricardo.MVCPrueba1.Application.UseCases.Extensions
     using Ricardo.MVCPrueba1.Application.UseCases.Persons.Searches;
     using Ricardo.MVCPrueba1.Application.UseCases.Persons.Updates;
 
-    public static class AddUseCaseServiceCollection
+    public static class AddUseCaseServiceCollectionExtensions
     {
-        public static IServiceCollection AddUseCases(this IServiceCollection services)
+        public static IServiceCollection AddUseCaseServiceCollection(this IServiceCollection services)
         {
             services
                 .AddScoped<IAddPersonUseCase, AddPersonUseCase>()
