@@ -13,6 +13,7 @@ namespace Ricardo.Application.Tests.Converter.PersonsViewModel.ToPersonEntity.Pr
     using Ricardo.MVCPrueba1.Application.UserInfo;
     using Ricardo.MVCPrueba1.Domain.Entities;
 
+    [TestCategory("Converter")]
     [TestClass]
     internal class UserIdConverterTests
     {
