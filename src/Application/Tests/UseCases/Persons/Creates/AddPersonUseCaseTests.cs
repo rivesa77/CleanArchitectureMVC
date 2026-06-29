@@ -27,10 +27,10 @@ namespace Ricardo.MVCPrueba1.Application.Tests.UseCases.Persons.Creates
 
         private static readonly PersonViewModel PersonViewModel = new PersonViewModel()
         {
-            DNI = PersonViewModelConstants.Dni,
-            Email = PersonViewModelConstants.Email,
-            Name = PersonViewModelConstants.Name,
-            Phone = PersonViewModelConstants.Phone,
+            DNI = PersonConstants.Dni,
+            Email = PersonConstants.Email,
+            Name = PersonConstants.Name,
+            Phone = PersonConstants.Phone,
         };
 
         private Mock<IPersonRepository> mockPersonRepository;
@@ -67,9 +67,9 @@ namespace Ricardo.MVCPrueba1.Application.Tests.UseCases.Persons.Creates
                 personViewModel = new PersonViewModel()
                 {
                     DNI = dni,
-                    Email = PersonViewModelConstants.Email,
-                    Name = PersonViewModelConstants.Name,
-                    Phone = PersonViewModelConstants.Phone,
+                    Email = PersonConstants.Email,
+                    Name = PersonConstants.Name,
+                    Phone = PersonConstants.Phone,
                 };
             }
 
@@ -112,9 +112,9 @@ namespace Ricardo.MVCPrueba1.Application.Tests.UseCases.Persons.Creates
 
             PersonViewModel personViewModel = new PersonViewModel()
             {
-                DNI = PersonViewModelConstants.Dni,
-                Email = PersonViewModelConstants.Email,
-                Name = PersonViewModelConstants.Name,
+                DNI = PersonConstants.Dni,
+                Email = PersonConstants.Email,
+                Name = PersonConstants.Name,
                 Phone = phone,
             };
 
