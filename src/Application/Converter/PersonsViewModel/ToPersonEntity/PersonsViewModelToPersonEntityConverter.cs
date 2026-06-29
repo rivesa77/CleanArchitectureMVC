@@ -4,40 +4,30 @@
 
 namespace Ricardo.MVCPrueba1.Application.Converter.PersonsViewModel.ToPersonEntity
 {
+    using Ricardo.CommonLibraries.Converters;
     using Ricardo.MVCPrueba1.Application.Converter.PersonsViewModel.ToPersonEntity.Properties;
     using Ricardo.MVCPrueba1.Application.Models;
     using Ricardo.MVCPrueba1.Domain.Entities;
 
-    internal class PersonsViewModelToPersonEntityConverter :
+    internal class PersonsViewModelToPersonEntityConverter : ClassConverterNonInitializeBase<
+        PersonViewModel,
+        PersonEntity,
+        IPersonsViewModelToPersonEntityPropertyConverter>,
         IPersonsViewModelToPersonEntityConverter
     {
-        private readonly IEnumerable<IPersonsViewModelToPersonEntityPropertyConverter> propertyConverters;
-
         public PersonsViewModelToPersonEntityConverter(
             IEnumerable<IPersonsViewModelToPersonEntityPropertyConverter> propertyConverters)
+            : base(propertyConverters)
         {
-            this.propertyConverters = propertyConverters;
         }
 
-        public PersonEntity Convert(PersonViewModel source)
+        protected override PersonEntity InitializeDestination()
         {
-            PersonEntity destination = new()
+            return new PersonEntity()
             {
                 DNI = string.Empty,
                 UserId = string.Empty,
             };
-
-            this.Convert(source, ref destination);
-
-            return destination;
-        }
-
-        public void Convert(PersonViewModel source, ref PersonEntity destination)
-        {
-            foreach (IPersonsViewModelToPersonEntityPropertyConverter propertyConverter in this.propertyConverters)
-            {
-                propertyConverter.Convert(source, in destination);
-            }
         }
     }
 }
