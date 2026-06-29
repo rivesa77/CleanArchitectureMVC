@@ -1,4 +1,4 @@
-// <copyright file="IPersonsViewModelToPersonEntityPorpertyConverter.cs" company="Ricardo">
+// <copyright file="IPersonsViewModelToPersonEntityPropertyConverter.cs" company="Ricardo">
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
