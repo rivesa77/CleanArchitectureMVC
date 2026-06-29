@@ -64,5 +64,31 @@ namespace Ricardo.Application.Tests.Converter.PersonsViewModel.ToPersonEntity.Pr
                 .Should()
                 .BeEquivalentTo(expectedResult);
         }
+
+        [TestMethod]
+        public void Converter_WithEmptyData_ReturnEmptyResult()
+        {
+            // Arrange.
+            this.mockPersonUserDetails
+                .Setup(m => m.UserId)
+                .Returns(PersonConstants.Id)
+                .Verifiable(Times.Never);
+
+            UserIdConverter propertyConverter = new UserIdConverter(this.mockPersonUserDetails.Object);
+
+            PersonViewModel sourceClass = default;
+
+            PersonEntity result = default;
+
+            // Act.
+            propertyConverter.Convert(sourceClass, result);
+
+            PersonEntity expectedResult = default;
+
+            // Assert.
+            result
+                .Should()
+                .BeEquivalentTo(expectedResult);
+        }
     }
 }
