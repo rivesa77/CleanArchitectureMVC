@@ -8,6 +8,7 @@ namespace Ricardo.Application.Tests.Converter.PersonsViewModel.ToPersonEntity.Ex
     using Ricardo.MVCPrueba1.Application.Converter.PersonsViewModel.ToPersonEntity.Extensions;
     using Ricardo.MVCPrueba1.Application.Tests.Converter;
 
+    /// <inheritdoc/>
     [TestClass]
     [TestCategory("RegistersConverters")]
     public class AddPersonViewModelToPersonEntitiesConverterRegisterTests :
