@@ -7,6 +7,7 @@ namespace Ricardo.MVCPrueba1.Application.Tests.Converter
     using Ricardo.CommonLibraries.Converters;
     using Ricardo.MVCPrueba1.Domain.Entities;
 
+    [TestCategory("PropertyConverterPersonEntity")]
     internal abstract class PropertyConverterPersonEntityTestBase<TSourceClass, TPropertyConverter> : PropertyConverterWithRequiredFieldTestBase<
         TSourceClass,
         PersonEntity,

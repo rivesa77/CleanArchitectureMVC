@@ -12,7 +12,7 @@ namespace Ricardo.Application.Tests.Converter.PersonsViewModel.ToPersonEntity.Ex
     [TestClass]
     [TestCategory("RegistersConverters")]
     public class AddPersonViewModelToPersonEntitiesConverterRegisterTests :
-        RegisterPropertyConverterTestsBase
+        RegisterClassAndPropertyConverterTestsBase
     {
         [TestMethod]
         public void AddPersonViewModelToPersonEntitiesConverter_WhenCalled_RegistersConverters()

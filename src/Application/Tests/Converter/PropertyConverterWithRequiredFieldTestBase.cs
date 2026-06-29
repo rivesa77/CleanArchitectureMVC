@@ -7,6 +7,7 @@ namespace Ricardo.MVCPrueba1.Application.Tests.Converter
     using FluentAssertions;
     using Ricardo.CommonLibraries.Converters;
 
+    [TestCategory("Converter")]
     [TestClass]
     public abstract class PropertyConverterWithRequiredFieldTestBase<
         TSourceClass,

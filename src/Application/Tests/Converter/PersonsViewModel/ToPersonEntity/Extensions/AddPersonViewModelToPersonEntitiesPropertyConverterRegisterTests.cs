@@ -11,7 +11,7 @@ namespace Ricardo.MVCPrueba1.Application.Tests.Converter.PersonsViewModel.ToPers
     [TestClass]
     [TestCategory("RegistersAllPropertyConverters")]
     public class AddPersonViewModelToPersonEntitiesPropertyConverterRegisterTests :
-        RegisterPropertyConverterTestsBase
+        RegisterClassAndPropertyConverterTestsBase
     {
         [TestMethod]
         public void AddPersonViewModelToPersonEntitiesConverter_WhenCalled_RegistersAllPropertyConverters()

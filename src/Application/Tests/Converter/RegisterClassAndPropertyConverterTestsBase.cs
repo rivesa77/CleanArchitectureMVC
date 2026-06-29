@@ -1,4 +1,4 @@
-// <copyright file="RegisterPropertyConverterTestsBase.cs" company="Ricardo">
+// <copyright file="RegisterClassAndPropertyConverterTestsBase.cs" company="Ricardo">
 //     Copyright (c) Ricardo. All rights reserved.
 // </copyright>
 
@@ -7,7 +7,8 @@ namespace Ricardo.MVCPrueba1.Application.Tests.Converter
     using FluentAssertions;
     using Microsoft.Extensions.DependencyInjection;
 
-    public abstract class RegisterPropertyConverterTestsBase
+    [TestCategory("RegisterPropertyConverter")]
+    public abstract class RegisterClassAndPropertyConverterTestsBase
     {
         protected static void AssertRegisterPropertyConverters<TConverter>(Action<ServiceCollection> addServiceCollection)
         {
