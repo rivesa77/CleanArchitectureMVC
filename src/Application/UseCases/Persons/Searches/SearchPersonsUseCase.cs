@@ -78,8 +78,6 @@ namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Searches
 
         private async Task<PersonSearchViewModel> SearchPersons(PersonSearchCriteria criteria)
         {
-            string userId = this.PersonUserDetails.UserId;
-
             PersonSearchQuery personSearchQuery = this.personSearchQueryConverter.Convert(criteria);
 
             (IEnumerable<PersonEntity> personEntities, int totalItems) = await this.PersonRepository
