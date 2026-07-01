@@ -164,6 +164,11 @@ Web conecta todo.
 
 ## Datos iniciales y usuario de prueba
 
+La autenticacion utiliza la plantilla y la interfaz predeterminadas de ASP.NET Core Identity para registrar,
+autenticar y validar al usuario. Identity proporciona las paginas de acceso y registro, la validacion de credenciales
+y la autenticacion mediante cookies, mientras que los usuarios se almacenan en `ApplicationDbContext`. Actualmente
+no se exige la confirmacion de la cuenta para iniciar sesion.
+
 Al arrancar la aplicacion se aplican las migraciones pendientes y se ejecuta el proceso de seed. La primera vez que
 se inicia con una base de datos vacia, se crea un usuario de demostracion y se cargan personas de prueba asociadas a
 ese usuario.
