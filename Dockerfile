@@ -11,16 +11,14 @@ WORKDIR /src/CleanArchitectureMVC
 
 COPY ["Directory.Build.props", "."]
 COPY ["Directory.Build.targets", "."]
+COPY ["NuGet.config", "."]
+COPY ["local-packages/", "local-packages/"]
 COPY ["CleanArchitectureMVC.csproj", "."]
 COPY ["src/Application/Application.csproj", "src/Application/"]
 COPY ["src/Domain/Domain.csproj", "src/Domain/"]
 COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
 
-COPY --from=localnuget . /nuget-local
-
-RUN dotnet restore "CleanArchitectureMVC.csproj" \
-    --source https://api.nuget.org/v3/index.json \
-    --source /nuget-local
+RUN dotnet restore "CleanArchitectureMVC.csproj" --configfile NuGet.config
 
 COPY . .
 

@@ -21,21 +21,21 @@ Los archivos principales son:
 - [Dockerfile](./Dockerfile): restaura, compila y publica la aplicación.
 - [compose.yaml](./compose.yaml): configura la aplicación, SQL Server, puertos,
   variables, comprobación de salud y volumen.
+- [NuGet.config](./NuGet.config): combina nuget.org con el feed
+  `local-packages` incluido en el repositorio.
 - [.dockerignore](./.dockerignore): excluye archivos innecesarios del contexto de
   compilación.
 
 ## Requisitos
 
 - Docker Desktop iniciado y configurado para contenedores Linux.
-- El paquete `CommonLibraries.Converters.1.0.3.nupkg` disponible en
-  `C:\C#\CODIGO\NUGETS`.
+- Los paquetes NuGet propios presentes en [local-packages](./local-packages).
 - Los puertos `8080` y `1433` libres.
 - Una contraseña fuerte para el usuario `sa`. SQL Server exige al menos ocho
   caracteres y una combinación de mayúsculas, minúsculas, números y símbolos.
 
-El contexto adicional `../../NUGETS` de `compose.yaml` corresponde, con la
-estructura actual de carpetas, a `C:\C#\CODIGO\NUGETS`. Si se mueve el
-repositorio o el feed local, se debe actualizar esa ruta.
+El feed local forma parte del repositorio. No se necesita configurar una ruta
+NuGet externa después de clonar el proyecto.
 
 ## Primera instalación
 
@@ -150,10 +150,11 @@ docker compose up -d web
 
 Si se actualiza `CommonLibraries.Converters`, hay que:
 
-1. Copiar la nueva versión `.nupkg` a `C:\C#\CODIGO\NUGETS`.
+1. Copiar la nueva versión `.nupkg` a [local-packages](./local-packages).
 2. Actualizar `CommonLibrariesConvertersVersion` en
    [Directory.Build.props](./Directory.Build.props).
-3. Reconstruir la imagen sin caché.
+3. Confirmar el nuevo paquete en Git.
+4. Reconstruir la imagen sin caché.
 
 Para actualizar las imágenes base:
 
@@ -303,12 +304,13 @@ memoria o un problema con el volumen.
 Verificar que exista:
 
 ```text
-C:\C#\CODIGO\NUGETS\CommonLibraries.Converters.1.0.3.nupkg
+local-packages/CommonLibraries.Converters.1.0.3.nupkg
 ```
 
-Después reconstruir:
+También debe existir `NuGet.config` en la raíz. Después, restaurar y reconstruir:
 
 ```powershell
+dotnet restore
 docker compose build --no-cache web
 ```
 
