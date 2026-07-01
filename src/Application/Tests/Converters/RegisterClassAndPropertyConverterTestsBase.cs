@@ -7,7 +7,7 @@ namespace Ricardo.CleanArchitectureMVC.Application.Tests.Converters
     using FluentAssertions;
     using Microsoft.Extensions.DependencyInjection;
 
-    [TestCategory("RegisterPropertyConverter")]
+    [TestCategory("RegisterConverterAndPropertyConverter")]
     public abstract class RegisterClassAndPropertyConverterTestsBase
     {
         protected static void AssertRegisterPropertyConverters<TConverter>(Action<ServiceCollection> addServiceCollection)
