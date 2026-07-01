@@ -126,30 +126,30 @@ namespace Ricardo.MVCPrueba1.Infrastructure.Data.Repositories
 
         public async Task<bool> UpdatePersonAsync(PersonEntity personEntity)
         {
-            if (personEntity is null)
+            if (personEntity is null || personEntity.Id == Guid.Empty || string.IsNullOrWhiteSpace(personEntity.UserId))
             {
                 return false;
             }
 
             this.applicationDbContext.Persons.Update(personEntity);
 
-            await this.applicationDbContext.SaveChangesAsync().ConfigureAwait(false);
+            int result = await this.applicationDbContext.SaveChangesAsync().ConfigureAwait(false);
 
-            return true;
+            return result > 0;
         }
 
         public async Task<bool> DeletePersonAsync(PersonEntity personEntity)
         {
-            if (personEntity is null)
+            if (personEntity is null || personEntity.Id == Guid.Empty || string.IsNullOrWhiteSpace(personEntity.UserId))
             {
                 return false;
             }
 
-            this.applicationDbContext.Persons.Remove(personEntity);
+            int result = await this.applicationDbContext.Persons
+                .Where(person => person.Id == personEntity.Id && person.UserId == personEntity.UserId)
+                .ExecuteDeleteAsync();
 
-            await this.applicationDbContext.SaveChangesAsync().ConfigureAwait(false);
-
-            return true;
+            return result > 0;
         }
 
         private static IQueryable<PersonEntity> ApplySearch(

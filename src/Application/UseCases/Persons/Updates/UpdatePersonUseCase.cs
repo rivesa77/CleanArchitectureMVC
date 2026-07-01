@@ -51,7 +51,10 @@ namespace Ricardo.MVCPrueba1.Application.UseCases.Persons.Updates
                 return Result.Failure<bool>("No changes to update");
             }
 
-            bool hasDniChanged = !string.Equals(sourceClass.DNI, currentPerson.DNI, StringComparison.Ordinal);
+            bool hasDniChanged = !string.Equals(
+                sourceClass.DNI,
+                currentPerson.DNI,
+                StringComparison.Ordinal);
 
             bool existsDniDb = await this.personRepository
                 .ExistsByDniAndIdAsync(sourceClass.DNI, sourceClass.Id)
