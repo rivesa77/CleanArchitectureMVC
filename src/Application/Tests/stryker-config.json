@@ -1,6 +1,6 @@
 {
   "stryker-config": {
     "solution": "../../../CleanArchitectureMVC.slnx",
-    "project": "CleanArchitectureMVC.csproj"
+    "project": "Application.csproj"
   }
 }
