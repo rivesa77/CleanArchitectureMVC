@@ -41,29 +41,29 @@ namespace Ricardo.CleanArchitectureMVC.Application.UseCases.Persons.Searches
 
         private static PersonSearchCriteria NormalizeCriteria(PersonSearchCriteria criteria)
         {
-            PersonSearchCriteria normalizedCriteria = criteria ?? new PersonSearchCriteria();
+            criteria ??= new PersonSearchCriteria();
 
-            normalizedCriteria.PageNumber = normalizedCriteria.PageNumber < 1 ? 1 : normalizedCriteria.PageNumber;
+            criteria.PageNumber = criteria.PageNumber < 1 ? 1 : criteria.PageNumber;
 
-            normalizedCriteria.PageSize = AllowedPageSizes.Contains(normalizedCriteria.PageSize)
-                ? normalizedCriteria.PageSize
+            criteria.PageSize = AllowedPageSizes.Contains(criteria.PageSize)
+                ? criteria.PageSize
                 : AllowedPageSizes[0];
 
-            normalizedCriteria.SearchField = Enum.IsDefined(normalizedCriteria.SearchField)
-                ? normalizedCriteria.SearchField
+            criteria.SearchField = Enum.IsDefined(criteria.SearchField)
+                ? criteria.SearchField
                 : PersonSearchField.All;
 
-            normalizedCriteria.SearchTerm = normalizedCriteria.SearchTerm?.Trim();
+            criteria.SearchTerm = criteria.SearchTerm?.Trim();
 
-            normalizedCriteria.SortField = Enum.IsDefined(normalizedCriteria.SortField)
-                ? normalizedCriteria.SortField
+            criteria.SortField = Enum.IsDefined(criteria.SortField)
+                ? criteria.SortField
                 : PersonSortField.Name;
 
-            normalizedCriteria.SortDirection = Enum.IsDefined(normalizedCriteria.SortDirection)
-                ? normalizedCriteria.SortDirection
+            criteria.SortDirection = Enum.IsDefined(criteria.SortDirection)
+                ? criteria.SortDirection
                 : PersonSortDirection.Ascending;
 
-            return normalizedCriteria;
+            return criteria;
         }
 
         private static int GetTotalPages(int totalItems, int pageSize)
