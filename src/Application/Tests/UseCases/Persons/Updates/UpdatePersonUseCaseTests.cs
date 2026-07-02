@@ -13,6 +13,7 @@ namespace Ricardo.CleanArchitectureMVC.Application.Tests.UseCases.Persons.Update
     using Ricardo.CleanArchitectureMVC.Application.Tests.Models.Validations;
     using Ricardo.CleanArchitectureMVC.Application.UseCases.Persons.Updates;
     using Ricardo.CleanArchitectureMVC.Application.UserInfo;
+    using Ricardo.CommonLibraries.Extensions.Tests.Mocks;
     using ROP;
 
     [TestClass]
@@ -34,9 +35,9 @@ namespace Ricardo.CleanArchitectureMVC.Application.Tests.UseCases.Persons.Update
         [TestCleanup]
         public void Verify()
         {
-            this.mockPersonRepository.VerifyNoOtherCalls();
-            this.mockConverter.VerifyNoOtherCalls();
-            this.mockPersonUserDetails.VerifyNoOtherCalls();
+            this.mockPersonRepository.VerifyAllAndOtherCalls();
+            this.mockConverter.VerifyAllAndOtherCalls();
+            this.mockPersonUserDetails.VerifyAllAndOtherCalls();
         }
 
         [TestMethod]

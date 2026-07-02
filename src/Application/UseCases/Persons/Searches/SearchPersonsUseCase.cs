@@ -43,27 +43,23 @@ namespace Ricardo.CleanArchitectureMVC.Application.UseCases.Persons.Searches
         {
             criteria ??= new PersonSearchCriteria();
 
-            criteria.PageNumber = criteria.PageNumber < 1 ? 1 : criteria.PageNumber;
-
-            criteria.PageSize = AllowedPageSizes.Contains(criteria.PageSize)
-                ? criteria.PageSize
-                : AllowedPageSizes[0];
-
-            criteria.SearchField = Enum.IsDefined(criteria.SearchField)
-                ? criteria.SearchField
-                : PersonSearchField.All;
-
-            criteria.SearchTerm = criteria.SearchTerm?.Trim();
-
-            criteria.SortField = Enum.IsDefined(criteria.SortField)
-                ? criteria.SortField
-                : PersonSortField.Name;
-
-            criteria.SortDirection = Enum.IsDefined(criteria.SortDirection)
-                ? criteria.SortDirection
-                : PersonSortDirection.Ascending;
-
-            return criteria;
+            return new PersonSearchCriteria()
+            {
+                PageNumber = criteria.PageNumber < 1 ? 1 : criteria.PageNumber,
+                PageSize = AllowedPageSizes.Contains(criteria.PageSize)
+                    ? criteria.PageSize
+                    : AllowedPageSizes[0],
+                SearchField = Enum.IsDefined(criteria.SearchField)
+                    ? criteria.SearchField
+                    : PersonSearchField.All,
+                SearchTerm = criteria.SearchTerm?.Trim(),
+                SortField = Enum.IsDefined(criteria.SortField)
+                    ? criteria.SortField
+                    : PersonSortField.Name,
+                SortDirection = Enum.IsDefined(criteria.SortDirection)
+                    ? criteria.SortDirection
+                    : PersonSortDirection.Ascending,
+            };
         }
 
         private static int GetTotalPages(int totalItems, int pageSize)
@@ -86,9 +82,13 @@ namespace Ricardo.CleanArchitectureMVC.Application.UseCases.Persons.Searches
 
             int totalPages = GetTotalPages(totalItems, criteria.PageSize);
 
-            if (totalPages > 0 && criteria.PageNumber > totalPages)
+            int effectivePageNumber = totalPages == 0
+                ? 1
+                : Math.Min(criteria.PageNumber, totalPages);
+
+            if (effectivePageNumber != criteria.PageNumber && totalPages > 0)
             {
-                personSearchQuery.PageNumber = totalPages;
+                personSearchQuery.PageNumber = effectivePageNumber;
 
                 (personEntities, totalItems) = await this.PersonRepository
                     .SearchByUserIdAsync(personSearchQuery)
@@ -106,7 +106,7 @@ namespace Ricardo.CleanArchitectureMVC.Application.UseCases.Persons.Searches
                 SearchTerm = criteria.SearchTerm,
                 SortField = criteria.SortField,
                 SortDirection = criteria.SortDirection,
-                PageNumber = criteria.PageNumber,
+                PageNumber = effectivePageNumber,
                 PageSize = criteria.PageSize,
                 TotalItems = totalItems,
                 TotalPages = totalPages,
