@@ -15,81 +15,105 @@ using Serilog.Sinks.MSSqlServer;
 
 #pragma warning restore SA1200 // Using directives should be placed correctly
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-// Add services to the container.
-var connectionString = builder
-    .Configuration
-    .GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+string applicationStage = "host creation";
 
-builder.Services
-    .AddControllersWithViews();
-
-ConfigureSerilogServices(builder);
-
-builder.Services.Configure<RequestLocalizationOptions>(options =>
+try
 {
-    CultureInfo englishCulture = CultureInfo.GetCultureInfo("en-US");
+    Log.Information("Starting CleanArchitectureMVC");
 
-    options.DefaultRequestCulture = new RequestCulture(englishCulture);
-    options.SupportedCultures = [englishCulture];
-    options.SupportedUICultures = [englishCulture];
-    options.ApplyCurrentCultureToResponseHeaders = true;
-});
+    var builder = WebApplication.CreateBuilder(args);
 
-builder.Services
-    .AddApplicationServiceCollection()
-    .AddInfrastructureServiceCollection(connectionString);
+    applicationStage = "service configuration";
 
-var app = builder.Build();
+    // Add services to the container.
+    string connectionString = builder
+        .Configuration
+        .GetConnectionString("DefaultConnection")
+        ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-using (var scope = app.Services.CreateScope())
-{
-    ApplicationDbContext context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    await context.Database.MigrateAsync();
+    builder.Services
+        .AddControllersWithViews();
 
+    ConfigureSerilogServices(builder, connectionString);
+
+    builder.Services.Configure<RequestLocalizationOptions>(options =>
+    {
+        CultureInfo englishCulture = CultureInfo.GetCultureInfo("en-US");
+
+        options.DefaultRequestCulture = new RequestCulture(englishCulture);
+        options.SupportedCultures = [englishCulture];
+        options.SupportedUICultures = [englishCulture];
+        options.ApplyCurrentCultureToResponseHeaders = true;
+    });
+
+    builder.Services
+        .AddApplicationServiceCollection()
+        .AddInfrastructureServiceCollection(connectionString);
+
+    var app = builder.Build();
+
+    RegisterApplicationLifetimeLogging(app);
+
+    applicationStage = "database migration and seed";
+    await InitializeDatabaseAsync(app);
+
+    applicationStage = "request pipeline configuration";
+
+    // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
-        await ApplicationDbContextSeed.SeedAsync(scope.ServiceProvider);
+        app.UseMigrationsEndPoint();
     }
-}
+    else
+    {
+        app.UseExceptionHandler("/Home/Error");
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+        app.UseHsts();
+    }
+
+    app.UseHttpsRedirection();
+
+    app.UseRequestLocalization();
+
+    app.UseRouting();
+
+    app.UseAuthorization();
+
+    app.MapStaticAssets();
+
+    app.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}")
+        .WithStaticAssets();
+
+    app.MapRazorPages()
+       .WithStaticAssets();
+
+    applicationStage = "application runtime";
+    await app.RunAsync();
+}
+catch (Exception exception)
 {
-    app.UseMigrationsEndPoint();
+    Log.Fatal(
+        exception,
+        "CleanArchitectureMVC terminated unexpectedly during {ApplicationStage}",
+        applicationStage);
+
+    throw;
 }
-else
+finally
 {
-    app.UseExceptionHandler("/Home/Error");
-
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    Log.CloseAndFlush();
 }
-
-app.UseHttpsRedirection();
-
-app.UseRequestLocalization();
-
-app.UseRouting();
-
-app.UseAuthorization();
-
-app.MapStaticAssets();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
-app.MapRazorPages()
-   .WithStaticAssets();
-
-app.Run();
 
 public partial class Program
 {
-    private static void ConfigureSerilogServices(WebApplicationBuilder builder)
+    private static void ConfigureSerilogServices(WebApplicationBuilder builder, string connectionString)
     {
         builder.Services.AddSerilog((services, configuration) =>
         {
@@ -99,8 +123,7 @@ public partial class Program
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .WriteTo.MSSqlServer(
-                    connectionString: builder.Configuration
-                        .GetConnectionString("DefaultConnection"),
+                    connectionString: connectionString,
                     sinkOptions: new MSSqlServerSinkOptions
                     {
                         TableName = "Logs",
@@ -109,5 +132,38 @@ public partial class Program
                         BatchPeriod = TimeSpan.FromSeconds(5),
                     });
         });
+    }
+
+    private static async Task InitializeDatabaseAsync(WebApplication app)
+    {
+        await using AsyncServiceScope scope = app.Services.CreateAsyncScope();
+
+        ILogger<Program> logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        ApplicationDbContext context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        logger.LogInformation("Applying pending database migrations");
+        await context.Database.MigrateAsync().ConfigureAwait(false);
+        logger.LogInformation("Database migrations completed");
+
+        if (app.Environment.IsDevelopment())
+        {
+            logger.LogInformation("Starting development database seed");
+            await ApplicationDbContextSeed.SeedAsync(scope.ServiceProvider).ConfigureAwait(false);
+            logger.LogInformation("Development database seed completed");
+        }
+    }
+
+    private static void RegisterApplicationLifetimeLogging(WebApplication app)
+    {
+        app.Lifetime.ApplicationStarted.Register(() =>
+            Log.Information(
+                "CleanArchitectureMVC started in {EnvironmentName}",
+                app.Environment.EnvironmentName));
+
+        app.Lifetime.ApplicationStopping.Register(() =>
+            Log.Information("CleanArchitectureMVC is stopping"));
+
+        app.Lifetime.ApplicationStopped.Register(() =>
+            Log.Information("CleanArchitectureMVC stopped"));
     }
 }
