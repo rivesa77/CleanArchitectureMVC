@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Ricardo.CleanArchitectureMVC.Application.Extensions;
 using Ricardo.CleanArchitectureMVC.Infrastructure.Data;
 using Ricardo.CleanArchitectureMVC.Infrastructure.Extensions;
+using Serilog;
+using Serilog.Sinks.MSSqlServer;
 
 #pragma warning restore SA1200 // Using directives should be placed correctly
 
@@ -22,6 +24,8 @@ var connectionString = builder
 
 builder.Services
     .AddControllersWithViews();
+
+ConfigureSerilogServices(builder);
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
@@ -85,4 +89,25 @@ app.Run();
 
 public partial class Program
 {
+    private static void ConfigureSerilogServices(WebApplicationBuilder builder)
+    {
+        builder.Services.AddSerilog((services, configuration) =>
+        {
+            configuration
+                .ReadFrom.Configuration(builder.Configuration)
+                .ReadFrom.Services(services)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.MSSqlServer(
+                    connectionString: builder.Configuration
+                        .GetConnectionString("DefaultConnection"),
+                    sinkOptions: new MSSqlServerSinkOptions
+                    {
+                        TableName = "Logs",
+                        AutoCreateSqlTable = false,
+                        BatchPostingLimit = 50,
+                        BatchPeriod = TimeSpan.FromSeconds(5),
+                    });
+        });
+    }
 }
