@@ -5,6 +5,7 @@
 namespace Ricardo.CleanArchitectureMVC.Infrastructure.Data.Repositories
 {
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
     using Ricardo.CleanArchitectureMVC.Application.Models;
     using Ricardo.CleanArchitectureMVC.Application.Repositories;
     using Ricardo.CleanArchitectureMVC.Domain.Entities;
@@ -12,10 +13,12 @@ namespace Ricardo.CleanArchitectureMVC.Infrastructure.Data.Repositories
     internal class PersonRepository : IPersonRepository
     {
         private readonly ApplicationDbContext applicationDbContext;
+        private readonly ILogger<IPersonRepository> logger;
 
-        public PersonRepository(ApplicationDbContext applicationDbContext)
+        public PersonRepository(ApplicationDbContext applicationDbContext, ILogger<IPersonRepository> logger)
         {
             this.applicationDbContext = applicationDbContext;
+            this.logger = logger;
         }
 
         public async Task<bool> ExistsByDniAsync(string dni)
@@ -148,6 +151,18 @@ namespace Ricardo.CleanArchitectureMVC.Infrastructure.Data.Repositories
             int affectedRows = await this.applicationDbContext.Persons
                 .Where(person => person.Id == personEntity.Id && person.UserId == personEntity.UserId)
                 .ExecuteDeleteAsync();
+
+            if (affectedRows == 1)
+            {
+                using (this.logger.BeginScope(new Dictionary<string, object>
+                {
+                    ["PersonId"] = personEntity.Id,
+                    ["UserId"] = personEntity.UserId,
+                }))
+                {
+                    this.logger.LogInformation("Deleted Person");
+                }
+            }
 
             return affectedRows == 1;
         }

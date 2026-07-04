@@ -5,7 +5,9 @@
 namespace Ricardo.CleanArchitectureMVC.Infrastructure.Tests.Data.Repositories
 {
     using FluentAssertions;
+    using Microsoft.Extensions.Logging;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Moq;
     using Ricardo.CleanArchitectureMVC.Application.Models;
     using Ricardo.CleanArchitectureMVC.Application.Repositories;
     using Ricardo.CleanArchitectureMVC.Domain.Entities;
@@ -17,6 +19,8 @@ namespace Ricardo.CleanArchitectureMVC.Infrastructure.Tests.Data.Repositories
     [TestCategory("Infrastructure.PersonRepository")]
     public class PersonRepositoryTests
     {
+        private static readonly Mock<ILogger<IPersonRepository>> MockLogger = new Mock<ILogger<IPersonRepository>>();
+
         private static readonly PersonEntity PersonOne = new PersonEntity()
         {
             Name = "Francisco",
@@ -82,7 +86,7 @@ namespace Ricardo.CleanArchitectureMVC.Infrastructure.Tests.Data.Repositories
 
             await inMemoryDb.SaveChangesAsync();
 
-            PersonRepository personRepository = new PersonRepository(inMemoryDb);
+            PersonRepository personRepository = new PersonRepository(inMemoryDb, MockLogger.Object);
 
             bool result = await personRepository
                 .ExistsByDniAsync(dni)
@@ -106,7 +110,7 @@ namespace Ricardo.CleanArchitectureMVC.Infrastructure.Tests.Data.Repositories
 
             await inMemoryDb.SaveChangesAsync();
 
-            PersonRepository personRepository = new PersonRepository(inMemoryDb);
+            PersonRepository personRepository = new PersonRepository(inMemoryDb, MockLogger.Object);
 
             PersonSearchQuery personSearchQuery = new PersonSearchQuery()
             {
@@ -144,7 +148,7 @@ namespace Ricardo.CleanArchitectureMVC.Infrastructure.Tests.Data.Repositories
 
             await inMemoryDb.SaveChangesAsync();
 
-            PersonRepository personRepository = new PersonRepository(inMemoryDb);
+            PersonRepository personRepository = new PersonRepository(inMemoryDb, MockLogger.Object);
 
             PersonSearchQuery personSearchQuery = new PersonSearchQuery()
             {
