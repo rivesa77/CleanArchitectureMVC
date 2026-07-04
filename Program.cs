@@ -8,6 +8,7 @@ using System.Data;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Ricardo.CleanArchitectureMVC.Application.Extensions;
 using Ricardo.CleanArchitectureMVC.Infrastructure.Data;
 using Ricardo.CleanArchitectureMVC.Infrastructure.Extensions;
 using Serilog;
@@ -51,7 +52,7 @@ try
     });
 
     builder.Services
-        ////.AddApplicationServiceCollection()
+        .AddApplicationServiceCollection()
         .AddInfrastructureServiceCollection(connectionString);
 
     var app = builder.Build();
