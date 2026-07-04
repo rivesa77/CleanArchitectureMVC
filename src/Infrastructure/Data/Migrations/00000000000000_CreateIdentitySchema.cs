@@ -231,15 +231,14 @@ namespace Ricardo.CleanArchitectureMVC.Infrastructure.Data.Migrations
                     name: "Logs",
                     columns: table => new
                     {
-                        Id = table.Column<int>(nullable: false)
-                            .Annotation("SqlServer:Identity", "1, 1"),
+                        Id = table.Column<Guid>(
+                            type: "uniqueidentifier",
+                            nullable: false,
+                            defaultValueSql: "NEWID()"),
 
                         Message = table.Column<string>(
-                            type: "nvarchar(max)",
-                            nullable: true),
-
-                        MessageTemplate = table.Column<string>(
-                            type: "nvarchar(max)",
+                            type: "nvarchar(2048)",
+                            maxLength: 2048,
                             nullable: true),
 
                         Level = table.Column<string>(
@@ -248,14 +247,28 @@ namespace Ricardo.CleanArchitectureMVC.Infrastructure.Data.Migrations
                             nullable: true),
 
                         TimeStamp = table.Column<DateTime>(
-                            type: "datetime",
+                            type: "datetime2",
                             nullable: false),
 
                         Exception = table.Column<string>(
                             type: "nvarchar(max)",
                             nullable: true),
 
-                        Properties = table.Column<string>(
+                        SourceContext = table.Column<string>(
+                            type: "nvarchar(256)",
+                            maxLength: 256,
+                            nullable: true),
+
+                        PersonId = table.Column<Guid>(
+                            type: "uniqueidentifier",
+                            nullable: true),
+
+                        UserId = table.Column<string>(
+                            type: "nvarchar(450)",
+                            maxLength: 450,
+                            nullable: true),
+
+                        LogEvent = table.Column<string>(
                             type: "nvarchar(max)",
                             nullable: true),
                     },

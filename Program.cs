@@ -4,10 +4,10 @@
 
 #pragma warning disable SA1200 // Using directives should be placed correctly
 
+using System.Data;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
-using Ricardo.CleanArchitectureMVC.Application.Extensions;
 using Ricardo.CleanArchitectureMVC.Infrastructure.Data;
 using Ricardo.CleanArchitectureMVC.Infrastructure.Extensions;
 using Serilog;
@@ -51,14 +51,13 @@ try
     });
 
     builder.Services
-        .AddApplicationServiceCollection()
+        ////.AddApplicationServiceCollection()
         .AddInfrastructureServiceCollection(connectionString);
 
     var app = builder.Build();
 
     RegisterApplicationLifetimeLogging(app);
 
-    applicationStage = "database migration and seed";
     await InitializeDatabaseAsync(app);
 
     applicationStage = "request pipeline configuration";
@@ -130,7 +129,8 @@ public partial class Program
                         AutoCreateSqlTable = false,
                         BatchPostingLimit = 50,
                         BatchPeriod = TimeSpan.FromSeconds(5),
-                    });
+                    },
+                    columnOptions: CreateLogColumnOptions());
         });
     }
 
@@ -165,5 +165,53 @@ public partial class Program
 
         app.Lifetime.ApplicationStopped.Register(() =>
             Log.Information("CleanArchitectureMVC stopped"));
+    }
+
+    private static ColumnOptions CreateLogColumnOptions()
+    {
+        ColumnOptions options = new ColumnOptions();
+
+        options.Store.Remove(StandardColumn.Id);
+        options.PrimaryKey = null;
+        options.Store.Remove(StandardColumn.MessageTemplate);
+        options.Store.Remove(StandardColumn.Properties);
+        options.Store.Add(StandardColumn.LogEvent);
+
+        options.Message.DataLength = 2048;
+
+        options.TimeStamp.DataType = SqlDbType.DateTime2;
+        options.TimeStamp.ConvertToUtc = true;
+
+        options.LogEvent.ExcludeAdditionalProperties = true;
+        options.LogEvent.ExcludeStandardColumns = true;
+
+        options.AdditionalColumns =
+        [
+            new SqlColumn
+            {
+                ColumnName = "SourceContext",
+                PropertyName = "SourceContext",
+                DataType = SqlDbType.NVarChar,
+                DataLength = 256,
+                AllowNull = true,
+            },
+            new SqlColumn
+            {
+                ColumnName = "PersonId",
+                PropertyName = "PersonId",
+                DataType = SqlDbType.UniqueIdentifier,
+                AllowNull = true,
+            },
+            new SqlColumn
+            {
+                ColumnName = "UserId",
+                PropertyName = "UserId",
+                DataType = SqlDbType.NVarChar,
+                DataLength = 450,
+                AllowNull = true,
+            },
+        ];
+
+        return options;
     }
 }
